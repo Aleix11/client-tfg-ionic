@@ -13,7 +13,9 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: '../tab1/tab1.module#Tab1PageModule'
-          }
+          },
+            { path: 'createBet', loadChildren: './../create-bet/create-bet.module#CreateBetPageModule'},
+
         ]
       },
       {

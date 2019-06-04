@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import {NavController, Platform} from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,9 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 export class AppComponent {
   constructor(
     private platform: Platform,
+    private storage: Storage,
     private splashScreen: SplashScreen,
+    public navCtrl: NavController,
     private statusBar: StatusBar
   ) {
     this.initializeApp();
@@ -21,6 +24,14 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
+        this.storage.get('token').then((token) => {
+            if(token) {
+                this.navCtrl.navigateRoot('/menu/tabs/tab1')
+            } else {
+                this.navCtrl.navigateRoot('')
+            }
+        });
     });
   }
 }

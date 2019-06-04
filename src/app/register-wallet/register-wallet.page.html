@@ -1,0 +1,34 @@
+<ion-content>
+  <ion-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button (click)="createWallet()"
+                      expand="block"
+                      fill="outline">
+            Create Wallet
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item no-padding margin-start margin-end>
+            <ion-label position="floating">Private Key</ion-label>
+            <ion-input [(ngModel)]="privateKey" type="password"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button (click)="loadWallet()"
+                      expand="block"
+                      fill="outline">
+            Sign In
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+
+</ion-content>

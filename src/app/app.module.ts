@@ -10,19 +10,30 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {UserService} from "../providers/userService";
 import {HttpClientModule} from "@angular/common/http";
+import {PassUserService} from "../providers/pass-data-service/passUserService";
+import {IonicStorageModule} from '@ionic/storage';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {SummonerService} from "../providers/summonerService";
+import {BetService} from "../providers/betService";
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule,
       IonicModule.forRoot(),
+      IonicStorageModule.forRoot(),
       HttpClientModule,
-      AppRoutingModule],
+      AppRoutingModule,
+      BrowserAnimationsModule
+  ],
   providers: [
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    UserService
+    UserService,
+    PassUserService,
+    SummonerService,
+    BetService
   ],
   bootstrap: [AppComponent]
 })

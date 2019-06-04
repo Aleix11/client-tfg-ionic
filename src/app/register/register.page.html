@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <!--BACK BUTTON-->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item no-padding margin-start margin-end>
+          <ion-label position="floating">Username</ion-label>
+          <ion-input [(ngModel)]="user.username"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item no-padding margin-start margin-end>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input [(ngModel)]="user.email"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item no-padding margin-start margin-end>
+          <ion-label position="floating">Password</ion-label>
+          <ion-input [(ngModel)]="user.password" type="password"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item no-padding margin-start margin-end>
+          <ion-label position="floating">Repeat Password</ion-label>
+          <ion-input [(ngModel)]="repeatPassword" type="password"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button margin-start
+                    margin-end
+                    expand="block"
+                    fill="outline"
+                    (click)="register()">
+          Log In
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

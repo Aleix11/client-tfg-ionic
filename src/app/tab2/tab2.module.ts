@@ -11,8 +11,7 @@ import {HeaderMainPageModule} from "../header-main/header-main.module";
     IonicModule,
     CommonModule,
     FormsModule,
-    RouterModule.forChild([{ path: '', component: Tab2Page }]),
-    HeaderMainPageModule
+    RouterModule.forChild([{ path: '', component: Tab2Page }])
   ],
   declarations: [Tab2Page]
 })
