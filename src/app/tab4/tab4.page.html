@@ -30,7 +30,37 @@
 
     <ion-grid *ngIf="segment==='users'">
         <ion-row>
-            <ion-searchbar [(ngModel)]="searchUser"></ion-searchbar>
+            <ion-searchbar [(ngModel)]="searchUser"
+                           (ionChange)="searchListUser($event.detail.value)"></ion-searchbar>
+        </ion-row>
+        <ion-row>
+            <ion-col size="12">
+                <ion-list>
+                    <div *ngFor="let usr of users">
+                        <ion-item lines="inset"
+                                  *ngIf="usr._id !== userSession._id"
+                                  class="item-list user-list">
+                            <ion-avatar margin-end>
+                                <img src="../../assets/icon/favicon.png" height="64" width="64"/>
+                            </ion-avatar>
+                            <ion-label text-wrap>
+                                <ion-text>
+                                    <h3>{{usr.username}}</h3>
+                                </ion-text>
+                                <p>{{usr.friends.length}} Friends</p>
+                            </ion-label>
+                            <ion-icon *ngIf="!addOrDelete(usr)"
+                                      (click)="addFriend(usr)"
+                                      name="add" slot="end">
+                            </ion-icon>
+                            <ion-icon *ngIf="addOrDelete(usr)"
+                                      (click)="removeFriend(usr)"
+                                      name="close" slot="end">
+                            </ion-icon>
+                        </ion-item>
+                    </div>
+                </ion-list>
+            </ion-col>
         </ion-row>
     </ion-grid>
     <ion-grid *ngIf="segment==='bets'">

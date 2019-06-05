@@ -15,6 +15,8 @@ import {IonicStorageModule} from '@ionic/storage';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SummonerService} from "../providers/summonerService";
 import {BetService} from "../providers/betService";
+import {ModalFiltersBetsPage} from "./tab3/modal-filters-bets/modal-filters-bets.page";
+import {PassFiltersService} from "../providers/pass-data-service/passFiltersService";
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,7 +35,8 @@ import {BetService} from "../providers/betService";
     UserService,
     PassUserService,
     SummonerService,
-    BetService
+    BetService,
+    PassFiltersService
   ],
   bootstrap: [AppComponent]
 })

@@ -11,4 +11,122 @@
         </ion-buttons>
     </ion-toolbar>
 </ion-header>
-<ion-content></ion-content>
+
+<ion-content>
+    <ion-grid no-padding>
+        <ion-row>
+            <ion-col size="10" class="no-pad-right">
+                <!--SHOW FILTERS-->
+                <ion-row>
+                    <ion-col size="3"
+                             class="small-font"
+                             text-center>
+                        {{filters.minTokens}} - {{filters.maxTokens}}
+                    </ion-col>
+                    <ion-col size="3"
+                             class="small-font"
+                             text-center>
+                        {{filters.minDuration}} - {{filters.maxDuration}}
+                    </ion-col>
+                    <ion-col *ngIf="filters.summoner !== ''"
+                             size="3"
+                             class="small-font"
+                             text-center>
+                        {{filters.summoner}}
+                    </ion-col>
+                    <ion-col *ngIf="filters.username !== ''"
+                             size="3"
+                             class="small-font"
+                             text-center>
+                        {{filters.username}}
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col size="3" text-center>
+                        <p class="small-font">
+                            TOKENS
+                        </p>
+                    </ion-col>
+                    <ion-col size="3" text-center>
+                        <p class="small-font">
+                            DURATION
+                        </p>
+                    </ion-col>
+                    <ion-col *ngIf="filters.summoner !== ''"
+                             size="3" text-center>
+                        <p class="small-font">
+                            SUMMONER
+                        </p>
+                    </ion-col>
+                    <ion-col *ngIf="filters.username !== ''"
+                             size="3" text-center>
+                        <p class="small-font">
+                            USERNAME
+                        </p>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+            <ion-col size="2" no-padding>
+                <ion-button (click)="openFilters()"
+                            expand="full"
+                            fill="clear">
+                    Filters
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-grid>
+        <ion-row>
+            <ion-col size="12">
+                <ion-list>
+                    <ion-item *ngFor="let bet of bets">
+                        <ion-row>
+                            <ion-col size="3">
+                                <ion-row>
+                                    <ion-col>
+                                        {{bet.tokens}}
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>
+                                        <p class="small-font">
+                                            TOKENS
+                                        </p>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                            <ion-col size="3">
+                                <ion-row>
+                                    <ion-col>
+                                        {{bet.duration}}
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>
+                                        <p class="small-font">
+                                            DURATION
+                                        </p>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                            <ion-col size="6">
+                                <ion-row>
+                                    <ion-col>
+                                        {{bet.bettor1}}
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>
+                                        <p class="small-font">
+                                            BETTOR
+                                        </p>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-col>
+                        </ion-row>
+                    </ion-item>
+                </ion-list>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>

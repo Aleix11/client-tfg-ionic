@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tab3Page } from './tab3.page';
-import {HeaderMainPageModule} from "../header-main/header-main.module";
+import {ModalFiltersBetsPage} from "./modal-filters-bets/modal-filters-bets.page";
 
 @NgModule({
   imports: [
@@ -13,6 +13,7 @@ import {HeaderMainPageModule} from "../header-main/header-main.module";
     FormsModule,
     RouterModule.forChild([{ path: '', component: Tab3Page }])
   ],
-  declarations: [Tab3Page]
+  declarations: [Tab3Page, ModalFiltersBetsPage],
+  entryComponents:[ModalFiltersBetsPage]
 })
 export class Tab3PageModule {}
