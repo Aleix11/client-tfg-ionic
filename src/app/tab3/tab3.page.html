@@ -3,7 +3,7 @@
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title text-center>Title</ion-title>
+        <ion-title text-center>e-bet</ion-title>
         <ion-buttons slot="end">
             <ion-button>
                 <ion-icon name="chatboxes"></ion-icon>
@@ -80,50 +80,56 @@
             <ion-col size="12">
                 <ion-list>
                     <ion-item *ngFor="let bet of bets">
-                        <ion-row>
-                            <ion-col size="3">
-                                <ion-row>
-                                    <ion-col>
-                                        {{bet.tokens}}
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <p class="small-font">
-                                            TOKENS
-                                        </p>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-col>
-                            <ion-col size="3">
-                                <ion-row>
-                                    <ion-col>
-                                        {{bet.duration}}
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <p class="small-font">
-                                            DURATION
-                                        </p>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-col>
-                            <ion-col size="6">
-                                <ion-row>
-                                    <ion-col>
-                                        {{bet.bettor1}}
-                                    </ion-col>
-                                </ion-row>
-                                <ion-row>
-                                    <ion-col>
-                                        <p class="small-font">
-                                            BETTOR
-                                        </p>
-                                    </ion-col>
-                                </ion-row>
-                            </ion-col>
-                        </ion-row>
+                        <ion-grid no-padding [routerLink]="['bet', bet._id]">
+                            <ion-row>
+                                <ion-col size="3">
+                                    <ion-row>
+                                        <ion-col text-center>
+                                            {{bet.tokens}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col text-center no-padding>
+                                            <p class="small-font">
+                                                TOKENS
+                                            </p>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-col>
+                                <ion-col size="3">
+                                    <ion-row>
+                                        <ion-col *ngIf="bet.duration >= 1" text-center>
+                                            {{ bet?.duration.toFixed(0) }}
+                                        </ion-col>
+                                        <ion-col *ngIf="bet.duration === 0" text-center>
+                                            {{ bet?.duration.toFixed(0) }}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col text-center no-padding>
+                                            <p class="small-font">
+                                                DURATION
+                                            </p>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-col>
+                                <ion-col size="6">
+                                    <ion-row>
+                                        <ion-col text-center>
+                                            {{bet.bettor1}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col text-center no-padding>
+                                            <p class="small-font">
+                                                BETTOR
+                                            </p>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+
                     </ion-item>
                 </ion-list>
             </ion-col>

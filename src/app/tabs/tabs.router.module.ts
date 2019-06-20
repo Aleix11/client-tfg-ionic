@@ -33,7 +33,8 @@ const routes: Routes = [
           {
             path: '',
             loadChildren: '../tab3/tab3.module#Tab3PageModule'
-          }
+          },
+            { path: 'bet/:id', loadChildren: './../bet/bet.module#BetPageModule' },
         ]
       },
       {
@@ -51,7 +52,8 @@ const routes: Routes = [
               {
                   path: '',
                   loadChildren: '../tab5/tab5.module#Tab5PageModule'
-              }
+              },
+              { path: 'bet/:id', loadChildren: './../bet/bet.module#BetPageModule' },
           ]
       },
       {

@@ -12,7 +12,7 @@ import {PassFiltersService} from "../../providers/pass-data-service/passFiltersS
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
-export class Tab3Page implements OnInit{
+export class Tab3Page implements OnInit {
 
   bets : Bet[] = [];
   filters: Filters = new Filters();
@@ -24,6 +24,12 @@ export class Tab3Page implements OnInit{
 
   ngOnInit() {
       this.search();
+      this.clock();
+  }
+
+  ionViewWillEnter() {
+      this.search();
+      this.clock();
   }
 
   async openFilters() {
@@ -36,6 +42,7 @@ export class Tab3Page implements OnInit{
           .then((data) => {
             console.log(data);
             this.search();
+            this.clock();
           });
 
       await modal.present();
@@ -43,13 +50,25 @@ export class Tab3Page implements OnInit{
 
   search() {
       this.filters = this.passFiltersService.getFilters();
-      console.log(this.filters);
       this.storage.get('token').then(token => {
           this.betsService.getPendingBets(this.filters, token).subscribe(bets => {
               if(bets) {
                   this.bets = bets;
+                  this.bets.forEach(bet => {
+                      bet.duration = (bet.duration - Math.floor(Date.now()/1000))/60;
+                  });
               }
           })
       });
+  }
+
+  clock() {
+    setInterval(() => {
+            this.bets.forEach(bet => {
+                bet.duration = bet.duration - 1;
+            });
+        },
+        60000
+    );
   }
 }

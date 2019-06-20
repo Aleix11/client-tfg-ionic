@@ -7,6 +7,7 @@ import {Game} from "../../models/game";
 import {BetService} from "../../providers/betService";
 import {User} from "../../models/user";
 import {Router} from "@angular/router";
+import {ToastController} from "@ionic/angular";
 
 @Component({
   selector: 'app-create-bet',
@@ -33,6 +34,7 @@ export class CreateBetPage implements OnInit {
   constructor(private summonerService: SummonerService,
               private storage: Storage,
               private router: Router,
+              private toastController: ToastController,
               private betService: BetService,
               private userService: UserService) {
       this.storage.get('user').then(user => {
@@ -40,7 +42,7 @@ export class CreateBetPage implements OnInit {
           if(!this.user.address) {
               // reedirect to wallet to take an account
           }
-      })
+      });
   }
 
   ngOnInit() {
@@ -70,18 +72,18 @@ export class CreateBetPage implements OnInit {
       if(team === 'teamA') {
           this.checkBoxList[0].isChecked = true;
           this.checkBoxList[1].isChecked = false;
-          this.bet.team = 'Team A';
+          this.bet.teamBettor1 = 'Team A';
           console.log('A', this.checkBoxList, team);
       } else if(team === 'teamB') {
           this.checkBoxList[0].isChecked = false;
           this.checkBoxList[1].isChecked = true;
-          this.bet.team = 'Team B';
+          this.bet.teamBettor1 = 'Team B';
           console.log('B', this.checkBoxList, team);
       }
   }
 
   teamSelected() {
-      if(this.bet.team) {
+      if(this.bet.teamBettor1) {
           this.step = 2;
       }
   }
@@ -100,16 +102,22 @@ export class CreateBetPage implements OnInit {
   }
 
   createBet() {
-      this.bet.duration = Date.now() + this.bet.duration*60*1000;
+      this.bet.bettor1 = this.user.username;
+      this.bet.addressBettor1 = this.user.address;
+      this.bet.gameId = this.game._id;
       let betObject = {
-        bet: this.bet,
-        address: this.user.address
+        bet: this.bet
       };
       this.storage.get('token').then(token => {
-          this.betService.bet(betObject, token).subscribe(bet => {
+          this.betService.bet(betObject, token).subscribe(async bet => {
             console.log(bet);
             if(bet) {
-                // APOSTA FETA
+                const toast = await this.toastController.create({
+                    message: 'Bet created',
+                    duration: 3000,
+                    showCloseButton: true, color: 'dark'
+                });
+                toast.present();
                 this.router.navigate(['/menu/tabs/tab1']);
             }
           });
@@ -124,7 +132,7 @@ export class CreateBetPage implements OnInit {
       );
   }
 
-  private champions(id) {
+  public champions(id) {
         switch(id){
             case 266: return "Aatrox"; break;
             case 412: return "Thresh"; break;
@@ -254,7 +262,7 @@ export class CreateBetPage implements OnInit {
             case 41: return "Gangplank"; break;
             case 48: return "Trundle"; break;
             case 38: return "Kassadin"; break;
-            case 161: return "VelKoz"; break;
+            case 161: return "Velkoz"; break;
             case 143: return "Zyra"; break;
             case 267: return "Nami"; break;
             case 59: return "JarvanIV"; break;

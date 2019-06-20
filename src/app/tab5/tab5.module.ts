@@ -6,7 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { Tab5Page } from './tab5.page';
-import {HeaderMainPageModule} from "../header-main/header-main.module";
+import {ChartsModule} from "ng2-charts";
 
 const routes: Routes = [
   {
@@ -20,7 +20,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+      ChartsModule
   ],
   declarations: [Tab5Page]
 })

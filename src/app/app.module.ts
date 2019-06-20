@@ -15,8 +15,8 @@ import {IonicStorageModule} from '@ionic/storage';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SummonerService} from "../providers/summonerService";
 import {BetService} from "../providers/betService";
-import {ModalFiltersBetsPage} from "./tab3/modal-filters-bets/modal-filters-bets.page";
 import {PassFiltersService} from "../providers/pass-data-service/passFiltersService";
+import {ChartsModule} from "ng2-charts";
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,7 +26,8 @@ import {PassFiltersService} from "../providers/pass-data-service/passFiltersServ
       IonicStorageModule.forRoot(),
       HttpClientModule,
       AppRoutingModule,
-      BrowserAnimationsModule
+      BrowserAnimationsModule,
+      ChartsModule
   ],
   providers: [
     StatusBar,
