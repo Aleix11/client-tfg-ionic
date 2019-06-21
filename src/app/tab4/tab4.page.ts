@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {User} from "../../models/user";
 import {UserService} from "../../providers/userService";
 import { Storage } from '@ionic/storage';
+import {SummonerService} from "../../providers/summonerService";
 
 @Component({
   selector: 'app-tab4',
@@ -11,11 +12,15 @@ import { Storage } from '@ionic/storage';
 export class Tab4Page implements OnInit {
 
   searchUser: string;
-  segment: string = "bets";
+  searchSummoner: string;
+  segment: string = "users";
   users: User[] = [];
   userSession: User = new User();
+  summoner: any = {};
+  blank = true;
 
   constructor(private storage: Storage,
+              private summonerService: SummonerService,
               private userService: UserService) {
     this.storage.get('user').then(user => {
       this.userSession = user;
@@ -23,7 +28,7 @@ export class Tab4Page implements OnInit {
   }
 
   ngOnInit() {
-
+      this.searchListUser('');
   }
 
   segmentChanged(event) {
@@ -31,7 +36,7 @@ export class Tab4Page implements OnInit {
       this.segment = "users";
       this.searchListUser('');
     } else {
-      this.segment = "bets";
+      this.segment = "summoners";
     }
   }
 
@@ -81,4 +86,39 @@ export class Tab4Page implements OnInit {
       });
     });
   }
+
+  editFavouriteSummoner(summoner) {
+    console.log(summoner);
+    this.userSession.summoners[0] = summoner;
+    console.log(this.userSession.summoners[0]);
+    this.storage.get('token').then(token => {
+      this.userService.editFavouriteSummoner(this.userSession, token).subscribe(user =>{
+        if(user) {
+          this.userSession = user;
+          console.log(this.userSession.summoners[0], summoner);
+          this.storage.set('user', this.userSession);
+        }
+      })
+    });
+  }
+
+  searchSummonerFunction() {
+    this.storage.get('token').then(token => {
+        // FUNCTION TO SEARCH SUMMONER
+        this.summonerService.searchSummonerInfo({
+            summonerName: this.searchSummoner
+        }, token).subscribe(summoner => {
+          if(summoner) {
+            this.summoner = summoner;
+            this.blank = false;
+            console.log(this.summoner);
+          }
+        }, error => {
+            console.log(error);
+            this.summoner = null;
+            this.blank = false;
+        })
+    });
+  }
+
 }

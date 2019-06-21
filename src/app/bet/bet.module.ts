@@ -5,14 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { Tab5Page } from './tab5.page';
-import {ChartsModule} from "ng2-charts";
-import {ModalEditUserPage} from "./modal-edit-user/modal-edit-user.page";
+import { BetPage } from './bet.page';
+import {CreateBetPage} from "../create-bet/create-bet.page";
 
 const routes: Routes = [
   {
     path: '',
-    component: Tab5Page
+    component: BetPage
   }
 ];
 
@@ -21,10 +20,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes),
-      ChartsModule
+    RouterModule.forChild(routes)
   ],
-  declarations: [Tab5Page, ModalEditUserPage],
-    entryComponents:[ModalEditUserPage]
+  declarations: [BetPage],
+  providers: [CreateBetPage]
 })
-export class Tab5PageModule {}
+export class BetPageModule {}

@@ -16,11 +16,15 @@
     <ion-grid>
         <ion-row>
             <ion-col size="2" padding text-center>
-                <ion-avatar text-center>
+                <ion-avatar text-center (click)="presentModal()">
                     <img src="../../assets/icon/favicon.png" height="64" width="64"/>
+                    <ion-badge color="danger"
+                               style="position: absolute; margin-left: -10px; padding-left: 4px; padding-right: 4px;">
+                        <ion-icon name="brush"></ion-icon>
+                    </ion-badge>
                 </ion-avatar>
             </ion-col>
-            <ion-col size="4" no-padding padding-top padding-bottom text-center>
+            <ion-col size="4" margin-start no-padding padding-top padding-bottom text-center>
                 <ion-row text-center>
                     <ion-col size="12" text-center no-padding>
                         <ion-label text-center>
@@ -48,7 +52,7 @@
                     </ion-col>
                 </ion-row>
             </ion-col>
-            <ion-col size="4" no-padding padding-top padding-bottom text-center *ngIf="user.summoners && user.summoners[0]">
+            <ion-col size="3" no-padding padding-top padding-bottom text-center *ngIf="user.summoners && user.summoners[0]">
                 <ion-row text-center>
                     <ion-col size="12" text-center no-padding>
                         <ion-label text-center>
@@ -132,7 +136,7 @@
             </ion-col>
         </ion-row>
     </ion-grid>
-    <ion-grid *ngIf="segment==='statics'">
+    <ion-grid *ngIf="segment==='statics'" padding>
         <ion-row>
             <ion-col size="12" text-center no-padding>
                 <ion-label>
@@ -141,7 +145,7 @@
             </ion-col>
         </ion-row>
         <ion-row>
-            <ion-col size="12" text-center no-padding>
+            <ion-col size="12" text-center padding>
                 <div>
                     <div>
                         <div class="chart">
@@ -156,6 +160,66 @@
                         </div>
                     </div>
                 </div>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="6">
+                <ion-row>
+                    <ion-col text-center>
+                        {{user.stats.ratioWinLose}}
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col text-center no-padding>
+                        <p class="small-font">
+                            WIN / LOSE RATIO
+                        </p>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+            <ion-col size="6">
+                <ion-row>
+                    <ion-col text-center>
+                        {{user.stats.userMostBets}}
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col text-center no-padding>
+                        <p class="small-font">
+                            USER MOST BETS AGAINTS
+                        </p>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col size="6">
+                <ion-row>
+                    <ion-col text-center>
+                        {{user.stats.yourNemesisIs}}
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col text-center no-padding>
+                        <p class="small-font">
+                            YOUR NEMESIS IS...
+                        </p>
+                    </ion-col>
+                </ion-row>
+            </ion-col>
+            <ion-col size="6">
+                <ion-row>
+                    <ion-col text-center>
+                        {{user.stats.youAreNemesisOf}}
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col text-center no-padding>
+                        <p class="small-font">
+                            YOU ARE NEMESIS OF...
+                        </p>
+                    </ion-col>
+                </ion-row>
             </ion-col>
         </ion-row>
     </ion-grid>

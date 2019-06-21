@@ -1,0 +1,84 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item no-padding>
+          <ion-label position="floating">Username</ion-label>
+          <ion-input [(ngModel)]="filters.username"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-item no-padding>
+          <ion-label position="floating">Summoner</ion-label>
+          <ion-input [(ngModel)]="filters.summoner"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" text-center margin-top>
+        <ion-label>
+          {{filters.minTokens}} - {{filters.maxTokens}}
+        </ion-label>
+      </ion-col>
+      <ion-col size="12" text-center>
+        <ion-label>
+          Tokens
+        </ion-label>
+      </ion-col>
+      <ion-col size="12">
+        <ion-item no-padding>
+          <ion-range (ionChange)="changeTokensValue($event.detail.value)"
+                     [value]="tokens"
+                     dualKnobs="true" pin="true"
+                     min="0" max="100">
+            <ion-label slot="start">0</ion-label>
+            <ion-label slot="end">100</ion-label>
+          </ion-range>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" text-center margin-top>
+        <ion-label>
+          {{filters.minDuration}} - {{filters.maxDuration}}
+        </ion-label>
+      </ion-col>
+      <ion-col size="12" text-center>
+        <ion-label>
+          Duration
+        </ion-label>
+      </ion-col>
+      <ion-col size="12">
+        <ion-item no-padding>
+          <ion-range  (ionChange)="changeDurationValue($event.detail.value)"
+                      [value]="duration"
+                      dualKnobs="true" pin="true"
+                      min="0" max="60">
+            <ion-label slot="start">0</ion-label>
+            <ion-label slot="end">60</ion-label>
+          </ion-range>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4" offset="4" text-center>
+        <ion-button (click)="closeModal()"
+                    fill="outline">
+          Close
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

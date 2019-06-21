@@ -6,6 +6,8 @@ import {Bet} from "../../models/bet";
 import {BetService} from "../../providers/betService";
 import {ChartType, ChartOptions} from "chart.js";
 import {Label, ChartsModule} from "ng2-charts";
+import {ModalController} from "@ionic/angular";
+import {ModalEditUserPage} from "./modal-edit-user/modal-edit-user.page";
 
 @Component({
   selector: 'app-tab5',
@@ -20,7 +22,10 @@ export class Tab5Page implements OnInit {
     public pieChartOptions: ChartOptions = {
         responsive: true,
         legend: {
-            position: 'top',
+            display: true,
+            labels: {
+                fontColor: 'rgb(255, 255, 255)'
+            }
         },
         plugins: {
             datalabels: {
@@ -32,16 +37,17 @@ export class Tab5Page implements OnInit {
         }
     };
     public pieChartLabels: Label[] = ['Wins', 'Losses'];
-    public pieChartData: number[] = [2, 6];
+    public pieChartData: number[] = [0, 0];
     public pieChartType: ChartType = 'pie';
     public pieChartLegend = false;
     public pieChartColors = [
         {
-            backgroundColor: ['rgba(255,0,0,0.3)', 'rgba(0,255,0,0.3)',],
+            backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(255,0,0,0.3)',],
         },
     ];
 
   constructor(private storage: Storage,
+              public modalController: ModalController,
               private betsService: BetService,
               private userService: UserService) {
       this.storage.get('user').then(user => {
@@ -50,6 +56,8 @@ export class Tab5Page implements OnInit {
                   if (user) {
                       console.log('user: ', user);
                       this.user = user;
+                      this.pieChartData[0] = this.user.stats.wins;
+                      this.pieChartData[1] = this.user.stats.losses;
                       this.storage.set('user', user);
                       this.searchListBets();
                   }
@@ -74,13 +82,17 @@ export class Tab5Page implements OnInit {
         this.betsService.getBetsFromUser(this.user.username, token).subscribe(bets => {
           if(bets) {
             this.bets = bets;
-            this.calculationStatics();
           }
         });
       });
   }
 
-  calculationStatics() {
 
+  async presentModal() {
+    const modal = await this.modalController.create({
+        component: ModalEditUserPage,
+        componentProps: { user: this.user }
+    });
+    return await modal.present();
   }
 }
