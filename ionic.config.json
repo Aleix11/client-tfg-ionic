@@ -1,5 +1,7 @@
 {
   "name": "client-tfg-ionic",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

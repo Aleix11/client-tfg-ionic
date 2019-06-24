@@ -55,8 +55,8 @@
             <ion-col size="3" no-padding padding-top padding-bottom text-center *ngIf="user.summoners && user.summoners[0]">
                 <ion-row text-center>
                     <ion-col size="12" text-center no-padding>
-                        <ion-label text-center>
-                            {{user.summoners[0]}}
+                        <ion-label text-center class="summoners-profile-name">
+                            {{user.summoners[0].summonerName}}
                         </ion-label>
                     </ion-col>
                 </ion-row>
