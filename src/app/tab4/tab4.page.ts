@@ -3,6 +3,7 @@ import {User} from "../../models/user";
 import {UserService} from "../../providers/userService";
 import { Storage } from '@ionic/storage';
 import {SummonerService} from "../../providers/summonerService";
+import {ChatService} from "../../providers/chatService";
 
 @Component({
   selector: 'app-tab4',
@@ -18,19 +19,24 @@ export class Tab4Page implements OnInit {
   userSession: User = new User();
   summoner: any = {};
   blank = true;
+  numberMsg: number = 0;
 
   constructor(private storage: Storage,
               private summonerService: SummonerService,
+              private chatService: ChatService,
               private userService: UserService) {
-    this.storage.get('user').then(user => {
-      this.userSession = user;
-    })
+      this.storage.get('user').then(user => {
+        this.userSession = user;
+      })
   }
 
   ngOnInit() {
       this.searchListUser('');
   }
 
+  ionViewDidEnter() {
+      this.getNumberMessages()
+  }
   segmentChanged(event) {
     if(event.detail.value === "users") {
       this.segment = "users";
@@ -118,6 +124,17 @@ export class Tab4Page implements OnInit {
             this.summoner = null;
             this.blank = false;
         })
+    });
+  }
+
+  getNumberMessages() {
+    this.storage.get('token').then(token => {
+        this.userService.getUser(this.userSession._id, token).subscribe((data) => {
+            this.userSession = data;
+            this.chatService.getMessagesNotSeen(this.userSession, token).subscribe(messages => {
+                this.numberMsg = messages.number;
+            });
+        });
     });
   }
 

@@ -8,6 +8,7 @@ import {ChartType, ChartOptions} from "chart.js";
 import {Label, ChartsModule} from "ng2-charts";
 import {ModalController} from "@ionic/angular";
 import {ModalEditUserPage} from "./modal-edit-user/modal-edit-user.page";
+import {ChatService} from "../../providers/chatService";
 
 @Component({
   selector: 'app-tab5',
@@ -19,38 +20,42 @@ export class Tab5Page implements OnInit {
   segment: string = "bets";
   user: User = new User();
   bets: Bet[] = [];
-    public pieChartOptions: ChartOptions = {
-        responsive: true,
-        legend: {
-            display: true,
-            labels: {
-                fontColor: 'rgb(255, 255, 255)'
-            }
-        },
-        plugins: {
-            datalabels: {
-                formatter: (value, ctx) => {
-                    const label = ctx.chart.data.labels[ctx.dataIndex];
-                    return label;
-                },
-            },
+  numberMsg: number = 0;
+
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+    legend: {
+        display: true,
+        labels: {
+            fontColor: 'rgb(255, 255, 255)'
         }
-    };
-    public pieChartLabels: Label[] = ['Wins', 'Losses'];
-    public pieChartData: number[] = [0, 0];
-    public pieChartType: ChartType = 'pie';
-    public pieChartLegend = false;
-    public pieChartColors = [
-        {
-            backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(255,0,0,0.3)',],
+    },
+    plugins: {
+        datalabels: {
+            formatter: (value, ctx) => {
+                const label = ctx.chart.data.labels[ctx.dataIndex];
+                return label;
+            },
         },
-    ];
+    }
+  };
+  public pieChartLabels: Label[] = ['Wins', 'Losses'];
+  public pieChartData: number[] = [0, 0];
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = false;
+  public pieChartColors = [
+    {
+        backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(255,0,0,0.3)',],
+    },
+  ];
 
   constructor(private storage: Storage,
               public modalController: ModalController,
               private betsService: BetService,
+              private chatService: ChatService,
               private userService: UserService) {
       this.storage.get('user').then(user => {
+          this.user = user;
           this.storage.get('token').then(token => {
               this.userService.getUser(user._id, token).subscribe(user => {
                   if (user) {
@@ -69,6 +74,10 @@ export class Tab5Page implements OnInit {
   ngOnInit() {
   }
 
+  ionViewDidEnter() {
+      this.getNumberMessages()
+  }
+
   segmentChanged(event) {
       if(event.detail.value === "statics") {
           this.segment = "statics";
@@ -85,6 +94,17 @@ export class Tab5Page implements OnInit {
           }
         });
       });
+  }
+
+  getNumberMessages() {
+    this.storage.get('token').then(token => {
+        this.userService.getUser(this.user._id, token).subscribe((data) => {
+            this.user = data;
+            this.chatService.getMessagesNotSeen(this.user, token).subscribe(messages => {
+                this.numberMsg = messages.number;
+            });
+        });
+    });
   }
 
 

@@ -7,6 +7,8 @@ const routes: Routes = [
   { path: 'menu', loadChildren: './menu/menu.module#MenuPageModule' },
   { path: 'register', loadChildren: './register/register.module#RegisterPageModule' },
   { path: 'register-wallet', loadChildren: './register-wallet/register-wallet.module#RegisterWalletPageModule' },
+  { path: 'chat-list', loadChildren: './chat-list/chat-list.module#ChatListPageModule' },
+  { path: 'chat', loadChildren: './chat/chat.module#ChatPageModule' },
 ];
 @NgModule({
   imports: [

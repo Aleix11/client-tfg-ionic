@@ -60,6 +60,12 @@ export class UserService {
         return this.http.post<User>(`${this.usersUrl}/getUserFromId`, {user: id}, httpOptions);
     }
 
+    getUserFromUsername(username, tkn): Observable<User> {
+        httpOptions.headers = httpOptions.headers.delete("Authorization");
+        httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
+        return this.http.post<User>(`${this.usersUrl}/getUserFromUsername`, {user: username}, httpOptions);
+    }
+
     editFavouriteSummoner(user, tkn) : Observable<User> {
         httpOptions.headers = httpOptions.headers.delete("Authorization");
         httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
