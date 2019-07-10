@@ -29,9 +29,6 @@ export class Tab3Page implements OnInit {
               private chatService: ChatService,
               public passFiltersService: PassFiltersService,
               public modalController: ModalController) {
-      this.storage.get('user').then(user => {
-          this.user = user;
-      });
   }
 
   ngOnInit() {
@@ -45,7 +42,10 @@ export class Tab3Page implements OnInit {
   }
 
   ionViewDidEnter() {
-        this.getNumberMessages()
+      this.storage.get('user').then(user => {
+          this.user = user;
+          this.getNumberMessages()
+      });
   }
 
   async openFilters() {

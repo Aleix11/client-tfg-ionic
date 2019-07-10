@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {Bet} from "../../models/bet";
 import {SummonerService} from "../../providers/summonerService";
 import {UserService} from "../../providers/userService";
@@ -7,7 +7,13 @@ import {Game} from "../../models/game";
 import {BetService} from "../../providers/betService";
 import {User} from "../../models/user";
 import {Router} from "@angular/router";
-import {ToastController} from "@ionic/angular";
+import {LoadingController, ModalController, ToastController} from "@ionic/angular";
+import {WEB3} from "../web3";
+import {AbiItem} from "web3-utils";
+import {ModalPasswordPage} from "./modal-password/modal-password.page";
+import Web3 from "web3";
+import {__await} from "tslib";
+
 
 @Component({
   selector: 'app-create-bet',
@@ -30,10 +36,416 @@ export class CreateBetPage implements OnInit {
         isChecked: false
     }
   ];
+  wallet: any = null;
+  walletEncrypt: any;
+  walletEncryptBool: boolean = false;
+
+  contractAddress = "0x7010c0e292652fc7f7bd0a6eb7308063ae72e776";
+  myContract: any;
+
+  loading: any;
+
+  abi : AbiItem[] = [
+      {
+          "constant": true,
+          "inputs": [],
+          "name": "name",
+          "outputs": [
+              {
+                  "name": "_name",
+                  "type": "string"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "pure",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_spender",
+                  "type": "address"
+              },
+              {
+                  "name": "_tokens",
+                  "type": "uint256"
+              }
+          ],
+          "name": "approve",
+          "outputs": [
+              {
+                  "name": "success",
+                  "type": "bool"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [],
+          "name": "totalSupply",
+          "outputs": [
+              {
+                  "name": "_totalSupply",
+                  "type": "uint256"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [
+              {
+                  "name": "",
+                  "type": "uint256"
+              }
+          ],
+          "name": "bets",
+          "outputs": [
+              {
+                  "name": "amount",
+                  "type": "uint256"
+              },
+              {
+                  "name": "state",
+                  "type": "uint8"
+              },
+              {
+                  "name": "bettor1",
+                  "type": "address"
+              },
+              {
+                  "name": "bettor2",
+                  "type": "address"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_from",
+                  "type": "address"
+              },
+              {
+                  "name": "_to",
+                  "type": "address"
+              },
+              {
+                  "name": "_tokens",
+                  "type": "uint256"
+              }
+          ],
+          "name": "transferFrom",
+          "outputs": [
+              {
+                  "name": "success",
+                  "type": "bool"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_amount",
+                  "type": "uint256"
+              },
+              {
+                  "name": "_id",
+                  "type": "uint256"
+              }
+          ],
+          "name": "betOpen",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_amount",
+                  "type": "uint256"
+              }
+          ],
+          "name": "betCreate",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [
+              {
+                  "name": "_owner",
+                  "type": "address"
+              }
+          ],
+          "name": "balanceOf",
+          "outputs": [
+              {
+                  "name": "_balance",
+                  "type": "uint256"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_winner",
+                  "type": "address"
+              },
+              {
+                  "name": "_amount",
+                  "type": "uint256"
+              },
+              {
+                  "name": "_id",
+                  "type": "uint256"
+              }
+          ],
+          "name": "betClose",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [],
+          "name": "symbol",
+          "outputs": [
+              {
+                  "name": "_symbol",
+                  "type": "string"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "pure",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_bettor1",
+                  "type": "address"
+              },
+              {
+                  "name": "_amount",
+                  "type": "uint256"
+              },
+              {
+                  "name": "_id",
+                  "type": "uint256"
+              }
+          ],
+          "name": "betCloseFromPending",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_to",
+                  "type": "address"
+              },
+              {
+                  "name": "_tokens",
+                  "type": "uint256"
+              }
+          ],
+          "name": "transfer",
+          "outputs": [
+              {
+                  "name": "success",
+                  "type": "bool"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_bettor1",
+                  "type": "address"
+              },
+              {
+                  "name": "_bettor2",
+                  "type": "address"
+              },
+              {
+                  "name": "_amount",
+                  "type": "uint256"
+              },
+              {
+                  "name": "_id",
+                  "type": "uint256"
+              }
+          ],
+          "name": "betCloseRemake",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [
+              {
+                  "name": "_tokenOwner",
+                  "type": "address"
+              },
+              {
+                  "name": "_spender",
+                  "type": "address"
+              }
+          ],
+          "name": "allowance",
+          "outputs": [
+              {
+                  "name": "remaining",
+                  "type": "uint256"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "inputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+      },
+      {
+          "anonymous": false,
+          "inputs": [
+              {
+                  "indexed": false,
+                  "name": "timestamp",
+                  "type": "uint256"
+              },
+              {
+                  "indexed": false,
+                  "name": "id",
+                  "type": "uint256"
+              }
+          ],
+          "name": "BetPending",
+          "type": "event"
+      },
+      {
+          "anonymous": false,
+          "inputs": [
+              {
+                  "indexed": false,
+                  "name": "timestamp",
+                  "type": "uint256"
+              },
+              {
+                  "indexed": false,
+                  "name": "id",
+                  "type": "uint256"
+              }
+          ],
+          "name": "BetOpened",
+          "type": "event"
+      },
+      {
+          "anonymous": false,
+          "inputs": [
+              {
+                  "indexed": false,
+                  "name": "timestamp",
+                  "type": "uint256"
+              },
+              {
+                  "indexed": false,
+                  "name": "id",
+                  "type": "uint256"
+              }
+          ],
+          "name": "BetClosed",
+          "type": "event"
+      },
+      {
+          "anonymous": false,
+          "inputs": [
+              {
+                  "indexed": true,
+                  "name": "from",
+                  "type": "address"
+              },
+              {
+                  "indexed": true,
+                  "name": "to",
+                  "type": "address"
+              },
+              {
+                  "indexed": false,
+                  "name": "tokens",
+                  "type": "uint256"
+              }
+          ],
+          "name": "Transfer",
+          "type": "event"
+      },
+      {
+          "anonymous": false,
+          "inputs": [
+              {
+                  "indexed": true,
+                  "name": "tokenOwner",
+                  "type": "address"
+              },
+              {
+                  "indexed": true,
+                  "name": "spender",
+                  "type": "address"
+              },
+              {
+                  "indexed": false,
+                  "name": "tokens",
+                  "type": "uint256"
+              }
+          ],
+          "name": "Approval",
+          "type": "event"
+      }
+  ];
+
 
   constructor(private summonerService: SummonerService,
               private storage: Storage,
+              public modalController: ModalController,
+              public loadingController: LoadingController,
               private router: Router,
+              @Inject(WEB3) private web3: Web3,
               private toastController: ToastController,
               private betService: BetService,
               private userService: UserService) {
@@ -41,6 +453,24 @@ export class CreateBetPage implements OnInit {
           this.user = user;
           if(!this.user.address) {
               // reedirect to wallet to take an account
+          }
+      });
+
+      console.log(this.contractAddress);
+      this.myContract = new web3.eth.Contract(this.abi, this.contractAddress);
+
+      console.log(this.myContract);
+
+      this.storage.get('wallet').then(wallet => {
+          if(wallet) {
+              this.walletEncrypt = wallet;
+              console.log(wallet);
+              this.walletEncryptBool = true;
+          } else {
+              if(this.user.wallet) {
+                  this.walletEncrypt = this.user.wallet;
+                  this.walletEncryptBool = true;
+              }
           }
       });
   }
@@ -101,27 +531,137 @@ export class CreateBetPage implements OnInit {
       }
   }
 
-  createBet() {
+  async createBet() {
       this.bet.bettor1 = this.user.username;
       this.bet.addressBettor1 = this.user.address;
       this.bet.gameId = this.game._id;
       let betObject = {
-        bet: this.bet
+        bet: this.bet,
+        betId: null
       };
-      this.storage.get('token').then(token => {
-          this.betService.bet(betObject, token).subscribe(async bet => {
-            console.log(bet);
-            if(bet) {
-                const toast = await this.toastController.create({
-                    message: 'Bet created',
-                    duration: 3000,
-                    showCloseButton: true, color: 'dark'
-                });
-                toast.present();
-                this.router.navigate(['/menu/tabs/tab1']);
-            }
-          });
+
+      console.log('tokens: ', this.bet.tokens);
+      let betCreate = this.myContract.methods.betCreate(this.bet.tokens);
+      let encodedABI = betCreate.encodeABI();
+
+      let nonce = await this.web3.eth.getTransactionCount(this.bet.addressBettor1);
+
+      let nonceString = nonce.toString(16);
+
+      let tx = {
+          gas: 1500000,
+          gasPrice: '30000000000',
+          from: this.bet.addressBettor1,
+          data: encodedABI,
+          chainId: 3,
+          to: this.contractAddress,
+          nonce: nonce
+          // nonce: '0x' + nonceString
+      };
+
+      const modal = await this.modalController.create({
+          component: ModalPasswordPage
       });
+
+      modal.onDidDismiss()
+          .then(async (data) => {
+              console.log(data);
+
+              if(data) {
+                  await this.presentLoading();
+                  console.log('wallet modal', data);
+                  this.wallet = data.data;
+                  console.log(this.wallet.accounts[0].privateKey);
+                  // Fer find de la address del objecte user amb les addres de la wallet
+
+                  this.web3.eth.accounts.signTransaction(tx, this.wallet.accounts[0].privateKey).then(signed => {
+                      console.log('signed: ', signed);
+                      this.web3.eth.sendSignedTransaction(signed.rawTransaction).on('error', (error) => {
+                          console.log('error', error);
+                      })
+                          .on('transactionHash', (transactionHash) => {
+                              console.log('transactionHash', transactionHash);
+                          })
+                          .on('receipt', async (receipt) => {
+                              console.log('receipt', receipt);
+                          })
+                          .on('confirmation', (confirmationNumber, receipt) => {
+                              console.log('confirmation', confirmationNumber, receipt);
+                              let blockNumber = receipt.blockNumber;
+                              this.myContract.getPastEvents('BetPending', {
+                                  from: blockNumber,
+                                  to: blockNumber
+                              }).then((events) => {
+                                  if(events[0]) {
+                                      let betId = parseInt(events[0].returnValues.id._hex,16);
+                                      console.log('events: ', events[0].returnValues.id._hex, betId);
+                                      if(betId) {
+                                          this.storage.get('token').then(token => {
+                                              betObject.betId = betId;
+                                              this.betService.bet(betObject, token).subscribe(async bet => {
+                                                  console.log(bet);
+                                                  if(bet) {
+                                                      await this.loading.dismiss();
+
+                                                      const toast = await this.toastController.create({
+                                                          message: 'Bet created',
+                                                          duration: 3000,
+                                                          showCloseButton: true, color: 'dark'
+                                                      });
+                                                      toast.present();
+                                                      this.router.navigate(['/menu/tabs/tab1']);
+                                                  }
+                                              });
+                                          });
+                                      }
+                                  } else {
+                                      setTimeout(function () {
+                                          let betId = parseInt(events[0].returnValues.id._hex,16);
+                                          console.log('events: ', events[0].returnValues.id._hex, betId);
+                                          if(betId) {
+                                              this.storage.get('token').then(token => {
+                                                  betObject.betId = betId;
+                                                  this.betService.bet(betObject, token).subscribe(async bet => {
+                                                      console.log(bet);
+                                                      if(bet) {
+                                                          await this.loading.dismiss();
+
+                                                          const toast = await this.toastController.create({
+                                                              message: 'Bet created',
+                                                              duration: 3000,
+                                                              showCloseButton: true, color: 'dark'
+                                                          });
+                                                          toast.present();
+                                                          this.router.navigate(['/menu/tabs/tab1']);
+                                                      }
+                                                  });
+                                              });
+                                          }
+                                      }, 1000)
+                                  }
+                              })
+
+
+                          })
+                          .then((newContractInstance) => {
+                              console.log('contractInstance', newContractInstance); // instance with the new contract address
+                              if(newContractInstance && newContractInstance.events) {
+                                  console.log(newContractInstance.events);
+                              } else {
+                              }
+                          });
+                  });
+              }
+          });
+      return await modal.present();
+  }
+
+  async presentLoading() {
+      this.loading = await this.loadingController.create({
+          message: 'Please wait...',
+          cssClass: 'custom-class custom-loading'
+      });
+      await this.loading.present();
   }
 
   clock() {

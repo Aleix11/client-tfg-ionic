@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MenuController} from "@ionic/angular";
 import {Router, RouterEvent} from "@angular/router";
 import { Storage } from '@ionic/storage';
 import {User} from "../../models/user";
 import { Push, PushObject, PushOptions } from '@ionic-native/push/ngx';
+import Web3 from "web3";
+import {WEB3} from "../web3";
 
 @Component({
   selector: 'app-menu',
@@ -15,6 +17,7 @@ export class MenuPage {
     selectedPath = '';
     user: User = new User();
     constructor(private router: Router,
+                @Inject(WEB3) private web3: Web3,
                 private storage: Storage,
                 private push: Push,
                 private menu: MenuController) {
@@ -73,7 +76,7 @@ export class MenuPage {
             browser: {
                 pushServiceURL: 'http://push.api.phonegap.com/v1/push'
             }
-        }
+        } ;
 
         const pushObject: PushObject = this.push.init(options);
 
@@ -98,6 +101,8 @@ export class MenuPage {
     logOut() {
         this.storage.clear();
         this.menu.close('custom');
+        this.menu.toggle();
+        this.web3.eth.accounts.wallet.clear();
         this.router.navigate(['']);
     }
 

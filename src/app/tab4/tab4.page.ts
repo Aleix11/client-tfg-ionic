@@ -25,9 +25,6 @@ export class Tab4Page implements OnInit {
               private summonerService: SummonerService,
               private chatService: ChatService,
               private userService: UserService) {
-      this.storage.get('user').then(user => {
-        this.userSession = user;
-      })
   }
 
   ngOnInit() {
@@ -35,7 +32,11 @@ export class Tab4Page implements OnInit {
   }
 
   ionViewDidEnter() {
-      this.getNumberMessages()
+      this.storage.get('user').then(user => {
+          this.userSession = user;
+          this.getNumberMessages()
+      });
+
   }
   segmentChanged(event) {
     if(event.detail.value === "users") {

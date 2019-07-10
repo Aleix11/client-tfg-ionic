@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { CreateBetPage } from './create-bet.page';
+import {ModalPasswordPage} from "./modal-password/modal-password.page";
 
 const routes: Routes = [
   {
@@ -20,8 +21,8 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     RouterModule.forChild(routes)
-
   ],
-  declarations: [CreateBetPage]
+  declarations: [CreateBetPage, ModalPasswordPage],
+  entryComponents:[ModalPasswordPage]
 })
 export class CreateBetPageModule {}

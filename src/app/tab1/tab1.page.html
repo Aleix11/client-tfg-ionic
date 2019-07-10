@@ -31,5 +31,134 @@
                 </ion-button>
             </ion-col>
         </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-list>
+                    <ion-list-header>
+                        Open Bets
+                    </ion-list-header>
+
+                    <ion-item *ngFor="let bet of openBets">
+                        <ion-grid no-padding [routerLink]="['bet', bet._id]">
+                            <ion-row>
+                                <ion-col size="3">
+                                    <ion-row>
+                                        <ion-col text-center>
+                                            {{bet.bettor1}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col text-center no-padding>
+                                            <p class="small-font">
+                                                BETTOR 1
+                                            </p>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-col>
+                                <ion-col size="3">
+                                    <ion-row>
+                                        <ion-col text-center>
+                                            {{bet.tokens}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col text-center no-padding>
+                                            <p class="small-font">
+                                                TOKENS
+                                            </p>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-col>
+                                <ion-col size="3">
+                                    <ion-row>
+                                        <ion-col text-center>
+                                            {{bet.bettor2}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col text-center no-padding>
+                                            <p class="small-font">
+                                                BETTOR 2
+                                            </p>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                    <ion-label *ngIf="openBets.length === 0" text-center>
+                        <p>Empty list</p>
+                    </ion-label>
+                </ion-list>
+
+
+                <ion-list>
+                    <ion-list-header>
+                        Pending Bets
+                    </ion-list-header>
+
+                    <ion-item *ngFor="let bet of pendingBets">
+                        <ion-grid no-padding [routerLink]="['bet', bet._id]">
+                            <ion-row>
+                                <ion-col size="3">
+                                    <ion-row>
+                                        <ion-col text-center>
+                                            {{bet.tokens}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col text-center no-padding>
+                                            <p class="small-font">
+                                                TOKENS
+                                            </p>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-col>
+                                <ion-col size="3">
+                                    <ion-row>
+                                        <ion-col *ngIf="bet.duration >= 1" text-center>
+                                            {{ bet?.duration.toFixed(0) }}
+                                        </ion-col>
+                                        <ion-col *ngIf="bet.duration === 0" text-center>
+                                            {{ bet?.duration.toFixed(0) }}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col text-center no-padding>
+                                            <p class="small-font">
+                                                DURATION
+                                            </p>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-col>
+                                <ion-col size="5">
+                                    <ion-row>
+                                        <ion-col text-center>
+                                            {{bet.bettor1}}
+                                        </ion-col>
+                                    </ion-row>
+                                    <ion-row>
+                                        <ion-col text-center no-padding>
+                                            <p class="small-font">
+                                                BETTOR
+                                            </p>
+                                        </ion-col>
+                                    </ion-row>
+                                </ion-col>
+                                <ion-col size="1">
+                                    <ion-button (click)="closeBet(bet)">
+                                        <ion-icon name="close"></ion-icon>
+                                    </ion-button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-item>
+                    <ion-label *ngIf="pendingBets.length === 0" text-center>
+                        <p>Empty list</p>
+                    </ion-label>
+                </ion-list>
+
+            </ion-col>
+        </ion-row>
     </ion-grid>
 </ion-content>

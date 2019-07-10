@@ -1,12 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Wallet Creation</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
-  <ion-content>
-    <ion-grid>
+  <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-button (click)="createWallet()"
+          <ion-button margin-start
+                      margin-end
+                      (click)="createAccount()"
                       expand="block"
                       fill="outline">
-            Create Wallet
+            Create Account
           </ion-button>
         </ion-col>
       </ion-row>
@@ -18,17 +28,56 @@
           </ion-item>
         </ion-col>
       </ion-row>
-      <ion-row>
-      <ion-row>
+      <ion-row >
         <ion-col>
-          <ion-button (click)="loadWallet()"
+          <ion-button margin-start
+                      margin-end
+                      (click)="importAccount()"
                       expand="block"
                       fill="outline">
-            Sign In
+            Import Account
           </ion-button>
         </ion-col>
       </ion-row>
-    </ion-grid>
-  </ion-content>
-
+      <ion-row *ngIf="showSaveWallet" margin-top>
+        <ion-col size="12" text-center>
+            <ion-label>
+              Account added into your Wallet! You have to introduce a password for your wallet!
+            </ion-label>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="showSaveWallet">
+        <ion-col>
+          <ion-item no-padding margin-start margin-end>
+            <ion-label position="floating">
+              Password
+            </ion-label>
+            <ion-input [(ngModel)]="walletPassword"
+                       type="password"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="showSaveWallet">
+        <ion-col>
+          <ion-item no-padding margin-start margin-end>
+            <ion-label position="floating">
+              Repeat Password
+            </ion-label>
+            <ion-input [(ngModel)]="repeatWalletPassword"
+                       type="password"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="showSaveWallet">
+        <ion-col>
+          <ion-button margin-start
+                      margin-end
+                      expand="block"
+                      fill="outline"
+                      (click)="next()">
+            Next
+          </ion-button>
+        </ion-col>
+      </ion-row>
+  </ion-grid>
 </ion-content>

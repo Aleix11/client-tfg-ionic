@@ -25,14 +25,8 @@ export class RegisterPage implements OnInit {
 
   register() {
     if(this.user.password === this.repeatPassword) {
-        this.userService.register(this.user).subscribe(user => {
-            if(user) {
-                this.passUserService.setUser(user);
-                this.storage.set('token', user.token);
-                this.storage.set('user', user);
-                this.router.navigate(['/register-wallet'])
-            }
-        });
+        this.passUserService.setUser(this.user);
+        this.router.navigate(['/register-wallet'])
     } else {
       // Tooltip Passwords are not equal
     }

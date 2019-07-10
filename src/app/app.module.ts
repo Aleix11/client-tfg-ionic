@@ -22,7 +22,15 @@ import {ChatService} from "../providers/chatService";
 
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import {PassChatUsers} from "../providers/pass-data-service/passChatUsers";
+import {PassWalletService} from "../providers/pass-data-service/passWalletService";
 const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import {ModalPasswordPage} from "./create-bet/modal-password/modal-password.page";
+import {FormsModule} from "@angular/forms";
+
+// the second parameter 'fr' is optional
+registerLocaleData(localeFr, 'fr');
 
 @NgModule({
   declarations: [AppComponent],
@@ -47,7 +55,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3001', options: {} };
     PassFiltersService,
     Push,
     ChatService,
-    PassChatUsers
+    PassChatUsers,
+    PassWalletService
   ],
   bootstrap: [AppComponent]
 })

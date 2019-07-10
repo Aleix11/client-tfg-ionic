@@ -19,5 +19,6 @@ export class User {
         userMostBets: string;
         youAreNemesisOf: string;
         yourNemesisIs: string;
-    }
+    };
+    wallet: any;
 }

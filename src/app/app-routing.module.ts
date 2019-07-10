@@ -9,7 +9,7 @@ const routes: Routes = [
   { path: 'register-wallet', loadChildren: './register-wallet/register-wallet.module#RegisterWalletPageModule' },
   { path: 'chat-list', loadChildren: './chat-list/chat-list.module#ChatListPageModule' },
   { path: 'chat', loadChildren: './chat/chat.module#ChatPageModule' },
-];
+  ];
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })

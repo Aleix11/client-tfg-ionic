@@ -77,4 +77,10 @@ export class UserService {
         httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
         return this.http.post<User>(`${this.usersUrl}/editUser`, {user: user}, httpOptions);
     }
+
+    getNumberTokens(account, tkn) : Observable<any> {
+        httpOptions.headers = httpOptions.headers.delete("Authorization");
+        httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
+        return this.http.post<any>(`${this.usersUrl}/getNumberTokens`, {account: account}, httpOptions);
+    }
 }

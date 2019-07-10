@@ -75,7 +75,10 @@ export class Tab5Page implements OnInit {
   }
 
   ionViewDidEnter() {
-      this.getNumberMessages()
+      this.storage.get('user').then(user => {
+          this.user = user;
+          this.getNumberMessages()
+      });
   }
 
   segmentChanged(event) {
