@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <div text-center>
+      <img style="margin-top: 2px" text-center
+           src="../../assets/Logo e-bet.png" height="30"/>
+    </div>
+    <ion-buttons slot="end">
+      <ion-button class="chat-btn" routerLink="/chat-list">
+        <ion-icon name="chatboxes"></ion-icon>
+        <ion-badge class="number-badge">{{numberMsg}}</ion-badge>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row *ngIf="showPassWallet">
+      <ion-col>
+        <ion-item no-padding margin-start margin-end>
+          <ion-label position="floating">
+            Password
+          </ion-label>
+          <ion-input [(ngModel)]="walletPassword"
+                     type="password"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="showPassWallet">
+      <ion-col>
+        <ion-button margin-start
+                    margin-end
+                    expand="block"
+                    fill="outline"
+                    (click)="enter()">
+          Enter
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="showAccountWallet">
+    <ion-row>
+      <ion-col>
+        <ion-button margin-start
+                    margin-end
+                    (click)="createAccount()"
+                    expand="block"
+                    fill="outline">
+          Create Account
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item no-padding margin-start margin-end>
+          <ion-label position="floating">Private Key</ion-label>
+          <ion-input [(ngModel)]="privateKey" type="password"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button margin-start
+                    margin-end
+                    (click)="importAccount()"
+                    expand="block"
+                    fill="outline">
+          Import Account
+        </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="showSaveWallet" margin-top>
+      <ion-col>
+        <ion-button margin-start
+                    margin-end
+                    expand="block"
+                    fill="outline"
+                    (click)="save()">
+          Save
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

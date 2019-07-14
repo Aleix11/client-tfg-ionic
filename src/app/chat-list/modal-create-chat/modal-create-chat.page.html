@@ -1,0 +1,42 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" no-padding>
+        <ion-searchbar [(ngModel)]="searchUser"
+                       (ionChange)="searchListUser($event.detail.value)"></ion-searchbar>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-list>
+          <div *ngFor="let usr of users">
+            <ion-item class="item-menu"
+                      *ngIf="usr._id !== userSession._id"
+                      (click)="createChat(usr)"
+                      lines="inset">
+              <ion-avatar margin-end>
+                <img src="../../assets/icon/favicon.png" height="64" width="64"/>
+              </ion-avatar>
+              <ion-label text-wrap>
+                <ion-text>
+                  <h3>{{usr.username}}</h3>
+                </ion-text>
+                <p>{{usr.friends.length}} Friends</p>
+              </ion-label>
+            </ion-item>
+          </div>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

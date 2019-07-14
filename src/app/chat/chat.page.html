@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="userFrom && userNick == userFrom.username">{{userTo.username}}</ion-title>
+    <ion-title *ngIf="userTo && userNick == userTo.username">{{userFrom.username}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row *ngFor="let message of messages">
+      <ion-col size="9" *ngIf="message.from !== user._id"
+               class="message"
+               [ngClass]="{'my_message': message.from === user._id, 'other_message': message.from !== user._id}">
+        <span>{{message.message}}</span>
+        <div class="time">
+          {{message.created | date:'H:mm dd.MM'}}
+        </div>
+      </ion-col>
+
+      <ion-col offset="3" size="9" *ngIf="message.from === user._id"
+               class="message"
+               [ngClass]="{'my_message': message.from === user._id, 'other_message': message.from !== user._id}">
+        <span>{{message.message}}</span>
+        <div class="time">
+          {{message.created | date:'H:mm dd.MM'}}
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+
+<ion-footer class="dark-background white-text">
+  <ion-row class="dark-background">
+    <ion-col size="9" class="no-pad-bottom-top">
+      <ion-item lines="none" class="dark-background">
+        <ion-input type="text"
+                   padding-top
+                   class="no-pad-bottom"
+                   placeholder="Message"
+                   (keyup.enter)="sendMessage()"
+                   [(ngModel)]="message"></ion-input>
+      </ion-item>
+    </ion-col>
+    <ion-col size="3" class="no-pad-bottom-top">
+      <ion-button fill="clear"
+                  (click)="sendMessage()"
+                  [disabled]="!message">
+        Send
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-footer>
