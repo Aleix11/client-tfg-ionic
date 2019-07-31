@@ -83,4 +83,22 @@ export class UserService {
         httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
         return this.http.post<any>(`${this.usersUrl}/getNumberTokens`, {account: account}, httpOptions);
     }
+
+    buyTokensPassTokens(buyer, tokens, tkn) : Observable<any> {
+        httpOptions.headers = httpOptions.headers.delete("Authorization");
+        httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
+        return this.http.post<any>(`${this.usersUrl}/buyTokensPassTokens`, {
+            buyer: buyer,
+            tokens: tokens
+        }, httpOptions);
+    }
+
+    sellTokensPassEthers(buyer, tokens, tkn) : Observable<any> {
+        httpOptions.headers = httpOptions.headers.delete("Authorization");
+        httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
+        return this.http.post<any>(`${this.usersUrl}/sellTokensPassEthers`, {
+            buyer: buyer,
+            tokens: tokens
+        }, httpOptions);
+    }
 }
