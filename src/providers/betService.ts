@@ -40,12 +40,6 @@ export class BetService {
         return this.http.post<any>(`${this.betsUrl}/accept`, bet, httpOptions);
     }
 
-    closeBet(bet, tkn): Observable<any> {
-        httpOptions.headers = httpOptions.headers.delete("Authorization");
-        httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
-        return this.http.post<any>(`${this.betsUrl}/closeFromPending`, {bet: bet}, httpOptions);
-    }
-
     getBetsFromUser(user, tkn) : Observable<any> {
         httpOptions.headers = httpOptions.headers.delete("Authorization");
         httpOptions.headers = httpOptions.headers.append("Authorization", tkn);

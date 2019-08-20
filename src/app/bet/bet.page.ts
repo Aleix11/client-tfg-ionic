@@ -28,7 +28,7 @@ export class BetPage implements OnInit {
     walletEncrypt: any;
     walletEncryptBool: boolean = false;
 
-    contractAddress = "0x21f871474972bda9b3d331e626763e9ef86db4d5";
+    contractAddress = "0xbf1e3315d6f064ac3111420991cfdadb99665d6d";
     myContract: any;
 
     loading: any;
@@ -735,37 +735,16 @@ export class BetPage implements OnInit {
                                   from: blockNumber,
                                   to: blockNumber
                               }).then((events) => {
+                                  console.log(events);
                                   if(events[0]) {
-                                      let betId = parseInt(events[0].returnValues.id._hex,16);
-                                      console.log('events: ', events[0].returnValues.id._hex, betId);
-                                      if(betId) {
-                                          this.storage.get('token').then(token => {
-                                              this.betService.acceptBet(bet, token).subscribe(async bet => {
-                                                  console.log(bet);
-                                                  if(bet) {
-                                                      await this.loading.dismiss();
-
-                                                      // APOSTA ACCEPTA
-                                                      const toast = await this.toastController.create({
-                                                          message: 'Bet accepted',
-                                                          duration: 3000,
-                                                          showCloseButton: true, color: 'dark'
-                                                      });
-                                                      toast.present();
-                                                      this.router.navigate(['/menu/tabs/tab1']);
-                                                  }
-                                              });
-                                          });
-                                      }
-                                  } else {
-                                      setTimeout(function () {
-                                          let betId = parseInt(events[0].returnValues.id._hex,16);
+                                      setTimeout(() => {
+                                          let betId = parseInt(events[0].returnValues.id._hex, 16);
                                           console.log('events: ', events[0].returnValues.id._hex, betId);
-                                          if(betId) {
+                                          if (betId) {
                                               this.storage.get('token').then(token => {
                                                   this.betService.acceptBet(bet, token).subscribe(async bet => {
                                                       console.log(bet);
-                                                      if(bet) {
+                                                      if (bet) {
                                                           await this.loading.dismiss();
 
                                                           // APOSTA ACCEPTA
@@ -780,8 +759,9 @@ export class BetPage implements OnInit {
                                                   });
                                               });
                                           }
-                                      }, 1000)
+                                      }, 1000);
                                   }
+
                               })
                           })
                           .then((newContractInstance) => {

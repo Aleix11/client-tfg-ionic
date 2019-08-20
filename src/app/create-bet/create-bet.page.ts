@@ -40,26 +40,12 @@ export class CreateBetPage implements OnInit {
   walletEncrypt: any;
   walletEncryptBool = false;
 
-  contractAddress = '0x21f871474972bda9b3d331e626763e9ef86db4d5';
+  contractAddress = '0xbf1e3315d6f064ac3111420991cfdadb99665d6d';
   myContract: any;
 
   loading: any;
 
   abi: AbiItem[] = [
-      {
-          "constant": true,
-          "inputs": [],
-          "name": "name",
-          "outputs": [
-              {
-                  "name": "_name",
-                  "type": "string"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "pure",
-          "type": "function"
-      },
       {
           "constant": false,
           "inputs": [
@@ -87,193 +73,6 @@ export class CreateBetPage implements OnInit {
           "constant": false,
           "inputs": [
               {
-                  "name": "_tokens",
-                  "type": "uint256"
-              }
-          ],
-          "name": "sellTokensPassTokens",
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [],
-          "name": "totalSupply",
-          "outputs": [
-              {
-                  "name": "_totalSupply",
-                  "type": "uint256"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [
-              {
-                  "name": "",
-                  "type": "uint256"
-              }
-          ],
-          "name": "bets",
-          "outputs": [
-              {
-                  "name": "amount",
-                  "type": "uint256"
-              },
-              {
-                  "name": "state",
-                  "type": "uint8"
-              },
-              {
-                  "name": "bettor1",
-                  "type": "address"
-              },
-              {
-                  "name": "bettor2",
-                  "type": "address"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
-                  "name": "_from",
-                  "type": "address"
-              },
-              {
-                  "name": "_to",
-                  "type": "address"
-              },
-              {
-                  "name": "_tokens",
-                  "type": "uint256"
-              }
-          ],
-          "name": "transferFrom",
-          "outputs": [
-              {
-                  "name": "success",
-                  "type": "bool"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
-                  "name": "_amount",
-                  "type": "uint256"
-              },
-              {
-                  "name": "_id",
-                  "type": "uint256"
-              }
-          ],
-          "name": "betOpen",
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
-                  "name": "_amount",
-                  "type": "uint256"
-              }
-          ],
-          "name": "betCreate",
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
-                  "name": "_address",
-                  "type": "address"
-              },
-              {
-                  "name": "_tokens",
-                  "type": "uint256"
-              }
-          ],
-          "name": "buyTokensPassTokens",
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [],
-          "name": "tokenSellPrice",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "uint256"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
-                  "name": "_address",
-                  "type": "address"
-              },
-              {
-                  "name": "_tokens",
-                  "type": "uint256"
-              }
-          ],
-          "name": "sellTokensPassEthers",
-          "outputs": [],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [
-              {
-                  "name": "_owner",
-                  "type": "address"
-              }
-          ],
-          "name": "balanceOf",
-          "outputs": [
-              {
-                  "name": "_balance",
-                  "type": "uint256"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [
-              {
                   "name": "_winner",
                   "type": "address"
               },
@@ -293,17 +92,25 @@ export class CreateBetPage implements OnInit {
           "type": "function"
       },
       {
-          "constant": true,
-          "inputs": [],
-          "name": "symbol",
-          "outputs": [
+          "constant": false,
+          "inputs": [
               {
-                  "name": "_symbol",
-                  "type": "string"
+                  "name": "_bettor1",
+                  "type": "address"
+              },
+              {
+                  "name": "_amount",
+                  "type": "uint256"
+              },
+              {
+                  "name": "_id",
+                  "type": "uint256"
               }
           ],
+          "name": "betCloseFromPending",
+          "outputs": [],
           "payable": false,
-          "stateMutability": "pure",
+          "stateMutability": "nonpayable",
           "type": "function"
       },
       {
@@ -332,6 +139,10 @@ export class CreateBetPage implements OnInit {
                   "type": "address"
               },
               {
+                  "name": "_bettor2",
+                  "type": "address"
+              },
+              {
                   "name": "_amount",
                   "type": "uint256"
               },
@@ -340,7 +151,98 @@ export class CreateBetPage implements OnInit {
                   "type": "uint256"
               }
           ],
-          "name": "betCloseFromPending",
+          "name": "betCloseRemake",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_amount",
+                  "type": "uint256"
+              }
+          ],
+          "name": "betCreate",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_amount",
+                  "type": "uint256"
+              },
+              {
+                  "name": "_id",
+                  "type": "uint256"
+              }
+          ],
+          "name": "betOpen",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [],
+          "name": "buyTokensPassEthers",
+          "outputs": [],
+          "payable": true,
+          "stateMutability": "payable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_address",
+                  "type": "address"
+              },
+              {
+                  "name": "_tokens",
+                  "type": "uint256"
+              }
+          ],
+          "name": "buyTokensPassTokens",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_address",
+                  "type": "address"
+              },
+              {
+                  "name": "_tokens",
+                  "type": "uint256"
+              }
+          ],
+          "name": "sellTokensPassEthers",
+          "outputs": [],
+          "payable": true,
+          "stateMutability": "payable",
+          "type": "function"
+      },
+      {
+          "constant": false,
+          "inputs": [
+              {
+                  "name": "_tokens",
+                  "type": "uint256"
+              }
+          ],
+          "name": "sellTokensPassTokens",
           "outputs": [],
           "payable": false,
           "stateMutability": "nonpayable",
@@ -373,91 +275,27 @@ export class CreateBetPage implements OnInit {
           "constant": false,
           "inputs": [
               {
-                  "name": "_bettor1",
+                  "name": "_from",
                   "type": "address"
               },
               {
-                  "name": "_bettor2",
+                  "name": "_to",
                   "type": "address"
               },
               {
-                  "name": "_amount",
-                  "type": "uint256"
-              },
-              {
-                  "name": "_id",
+                  "name": "_tokens",
                   "type": "uint256"
               }
           ],
-          "name": "betCloseRemake",
-          "outputs": [],
+          "name": "transferFrom",
+          "outputs": [
+              {
+                  "name": "success",
+                  "type": "bool"
+              }
+          ],
           "payable": false,
           "stateMutability": "nonpayable",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [
-              {
-                  "name": "_id",
-                  "type": "uint256"
-              }
-          ],
-          "name": "betState",
-          "outputs": [
-              {
-                  "name": "state",
-                  "type": "uint8"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": false,
-          "inputs": [],
-          "name": "buyTokensPassEthers",
-          "outputs": [],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [],
-          "name": "tokenBuyPrice",
-          "outputs": [
-              {
-                  "name": "",
-                  "type": "uint256"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
-          "type": "function"
-      },
-      {
-          "constant": true,
-          "inputs": [
-              {
-                  "name": "_tokenOwner",
-                  "type": "address"
-              },
-              {
-                  "name": "_spender",
-                  "type": "address"
-              }
-          ],
-          "name": "allowance",
-          "outputs": [
-              {
-                  "name": "remaining",
-                  "type": "uint256"
-              }
-          ],
-          "payable": false,
-          "stateMutability": "view",
           "type": "function"
       },
       {
@@ -628,9 +466,172 @@ export class CreateBetPage implements OnInit {
           ],
           "name": "Approval",
           "type": "event"
+      },
+      {
+          "constant": true,
+          "inputs": [
+              {
+                  "name": "_tokenOwner",
+                  "type": "address"
+              },
+              {
+                  "name": "_spender",
+                  "type": "address"
+              }
+          ],
+          "name": "allowance",
+          "outputs": [
+              {
+                  "name": "remaining",
+                  "type": "uint256"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [
+              {
+                  "name": "_owner",
+                  "type": "address"
+              }
+          ],
+          "name": "balanceOf",
+          "outputs": [
+              {
+                  "name": "_balance",
+                  "type": "uint256"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [
+              {
+                  "name": "",
+                  "type": "uint256"
+              }
+          ],
+          "name": "bets",
+          "outputs": [
+              {
+                  "name": "amount",
+                  "type": "uint256"
+              },
+              {
+                  "name": "state",
+                  "type": "uint8"
+              },
+              {
+                  "name": "bettor1",
+                  "type": "address"
+              },
+              {
+                  "name": "bettor2",
+                  "type": "address"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [
+              {
+                  "name": "_id",
+                  "type": "uint256"
+              }
+          ],
+          "name": "betState",
+          "outputs": [
+              {
+                  "name": "state",
+                  "type": "uint8"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [],
+          "name": "name",
+          "outputs": [
+              {
+                  "name": "_name",
+                  "type": "string"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "pure",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [],
+          "name": "symbol",
+          "outputs": [
+              {
+                  "name": "_symbol",
+                  "type": "string"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "pure",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [],
+          "name": "tokenBuyPrice",
+          "outputs": [
+              {
+                  "name": "",
+                  "type": "uint256"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [],
+          "name": "tokenSellPrice",
+          "outputs": [
+              {
+                  "name": "",
+                  "type": "uint256"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+      },
+      {
+          "constant": true,
+          "inputs": [],
+          "name": "totalSupply",
+          "outputs": [
+              {
+                  "name": "_totalSupply",
+                  "type": "uint256"
+              }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
       }
   ];
 
+  maxTokens : number = 0;
 
   constructor(private summonerService: SummonerService,
               private storage: Storage,
@@ -645,6 +646,8 @@ export class CreateBetPage implements OnInit {
           this.user = user;
           if (!this.user.address) {
               // reedirect to wallet to take an account
+          } else {
+              this.getTokens(this.user.address);
           }
       });
 
@@ -668,6 +671,16 @@ export class CreateBetPage implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  async getTokens(address) {
+      await this.myContract.methods.balanceOf(address).call({from: address})
+          .then((result) => {
+              console.log('Result', result);
+              if(result) {
+                  this.maxTokens =  parseInt(result._hex, 16);
+              }
+          });
   }
 
   searchSummoner() {
@@ -807,7 +820,7 @@ export class CreateBetPage implements OnInit {
                                           });
                                       }
                                   } else {
-                                      setTimeout(function() {
+                                      setTimeout(() => {
                                           const betId = parseInt(events[0].returnValues.id._hex, 16);
                                           console.log('events: ', events[0].returnValues.id._hex, betId);
                                           if (betId) {
@@ -829,7 +842,7 @@ export class CreateBetPage implements OnInit {
                                                   });
                                               });
                                           }
-                                      }, 1000);
+                                      }, 2000);
                                   }
                               });
 

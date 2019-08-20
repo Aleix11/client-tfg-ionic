@@ -34,26 +34,12 @@ export class Tab2Page implements OnInit{
   numberTokensBuy: number = 0;
   numberTokensSell: number = 0;
 
-    contractAddress = "0x21f871474972bda9b3d331e626763e9ef86db4d5";
+    contractAddress = "0xbf1e3315d6f064ac3111420991cfdadb99665d6d";
     myContract: any;
 
     loading: any;
 
     abi : AbiItem[] = [
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "name",
-            "outputs": [
-                {
-                    "name": "_name",
-                    "type": "string"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "pure",
-            "type": "function"
-        },
         {
             "constant": false,
             "inputs": [
@@ -81,193 +67,6 @@ export class Tab2Page implements OnInit{
             "constant": false,
             "inputs": [
                 {
-                    "name": "_tokens",
-                    "type": "uint256"
-                }
-            ],
-            "name": "sellTokensPassTokens",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "totalSupply",
-            "outputs": [
-                {
-                    "name": "_totalSupply",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [
-                {
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "name": "bets",
-            "outputs": [
-                {
-                    "name": "amount",
-                    "type": "uint256"
-                },
-                {
-                    "name": "state",
-                    "type": "uint8"
-                },
-                {
-                    "name": "bettor1",
-                    "type": "address"
-                },
-                {
-                    "name": "bettor2",
-                    "type": "address"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_from",
-                    "type": "address"
-                },
-                {
-                    "name": "_to",
-                    "type": "address"
-                },
-                {
-                    "name": "_tokens",
-                    "type": "uint256"
-                }
-            ],
-            "name": "transferFrom",
-            "outputs": [
-                {
-                    "name": "success",
-                    "type": "bool"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_amount",
-                    "type": "uint256"
-                },
-                {
-                    "name": "_id",
-                    "type": "uint256"
-                }
-            ],
-            "name": "betOpen",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_amount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "betCreate",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_address",
-                    "type": "address"
-                },
-                {
-                    "name": "_tokens",
-                    "type": "uint256"
-                }
-            ],
-            "name": "buyTokensPassTokens",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "tokenSellPrice",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_address",
-                    "type": "address"
-                },
-                {
-                    "name": "_tokens",
-                    "type": "uint256"
-                }
-            ],
-            "name": "sellTokensPassEthers",
-            "outputs": [],
-            "payable": true,
-            "stateMutability": "payable",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [
-                {
-                    "name": "_owner",
-                    "type": "address"
-                }
-            ],
-            "name": "balanceOf",
-            "outputs": [
-                {
-                    "name": "_balance",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
                     "name": "_winner",
                     "type": "address"
                 },
@@ -287,17 +86,25 @@ export class Tab2Page implements OnInit{
             "type": "function"
         },
         {
-            "constant": true,
-            "inputs": [],
-            "name": "symbol",
-            "outputs": [
+            "constant": false,
+            "inputs": [
                 {
-                    "name": "_symbol",
-                    "type": "string"
+                    "name": "_bettor1",
+                    "type": "address"
+                },
+                {
+                    "name": "_amount",
+                    "type": "uint256"
+                },
+                {
+                    "name": "_id",
+                    "type": "uint256"
                 }
             ],
+            "name": "betCloseFromPending",
+            "outputs": [],
             "payable": false,
-            "stateMutability": "pure",
+            "stateMutability": "nonpayable",
             "type": "function"
         },
         {
@@ -326,6 +133,10 @@ export class Tab2Page implements OnInit{
                     "type": "address"
                 },
                 {
+                    "name": "_bettor2",
+                    "type": "address"
+                },
+                {
                     "name": "_amount",
                     "type": "uint256"
                 },
@@ -334,7 +145,98 @@ export class Tab2Page implements OnInit{
                     "type": "uint256"
                 }
             ],
-            "name": "betCloseFromPending",
+            "name": "betCloseRemake",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_amount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "betCreate",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_amount",
+                    "type": "uint256"
+                },
+                {
+                    "name": "_id",
+                    "type": "uint256"
+                }
+            ],
+            "name": "betOpen",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [],
+            "name": "buyTokensPassEthers",
+            "outputs": [],
+            "payable": true,
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_address",
+                    "type": "address"
+                },
+                {
+                    "name": "_tokens",
+                    "type": "uint256"
+                }
+            ],
+            "name": "buyTokensPassTokens",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_address",
+                    "type": "address"
+                },
+                {
+                    "name": "_tokens",
+                    "type": "uint256"
+                }
+            ],
+            "name": "sellTokensPassEthers",
+            "outputs": [],
+            "payable": true,
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_tokens",
+                    "type": "uint256"
+                }
+            ],
+            "name": "sellTokensPassTokens",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
@@ -367,91 +269,27 @@ export class Tab2Page implements OnInit{
             "constant": false,
             "inputs": [
                 {
-                    "name": "_bettor1",
+                    "name": "_from",
                     "type": "address"
                 },
                 {
-                    "name": "_bettor2",
+                    "name": "_to",
                     "type": "address"
                 },
                 {
-                    "name": "_amount",
-                    "type": "uint256"
-                },
-                {
-                    "name": "_id",
+                    "name": "_tokens",
                     "type": "uint256"
                 }
             ],
-            "name": "betCloseRemake",
-            "outputs": [],
+            "name": "transferFrom",
+            "outputs": [
+                {
+                    "name": "success",
+                    "type": "bool"
+                }
+            ],
             "payable": false,
             "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [
-                {
-                    "name": "_id",
-                    "type": "uint256"
-                }
-            ],
-            "name": "betState",
-            "outputs": [
-                {
-                    "name": "state",
-                    "type": "uint8"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [],
-            "name": "buyTokensPassEthers",
-            "outputs": [],
-            "payable": true,
-            "stateMutability": "payable",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "tokenBuyPrice",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [
-                {
-                    "name": "_tokenOwner",
-                    "type": "address"
-                },
-                {
-                    "name": "_spender",
-                    "type": "address"
-                }
-            ],
-            "name": "allowance",
-            "outputs": [
-                {
-                    "name": "remaining",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -622,6 +460,168 @@ export class Tab2Page implements OnInit{
             ],
             "name": "Approval",
             "type": "event"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_tokenOwner",
+                    "type": "address"
+                },
+                {
+                    "name": "_spender",
+                    "type": "address"
+                }
+            ],
+            "name": "allowance",
+            "outputs": [
+                {
+                    "name": "remaining",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_owner",
+                    "type": "address"
+                }
+            ],
+            "name": "balanceOf",
+            "outputs": [
+                {
+                    "name": "_balance",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "bets",
+            "outputs": [
+                {
+                    "name": "amount",
+                    "type": "uint256"
+                },
+                {
+                    "name": "state",
+                    "type": "uint8"
+                },
+                {
+                    "name": "bettor1",
+                    "type": "address"
+                },
+                {
+                    "name": "bettor2",
+                    "type": "address"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_id",
+                    "type": "uint256"
+                }
+            ],
+            "name": "betState",
+            "outputs": [
+                {
+                    "name": "state",
+                    "type": "uint8"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "name",
+            "outputs": [
+                {
+                    "name": "_name",
+                    "type": "string"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "pure",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "symbol",
+            "outputs": [
+                {
+                    "name": "_symbol",
+                    "type": "string"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "pure",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "tokenBuyPrice",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "tokenSellPrice",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "totalSupply",
+            "outputs": [
+                {
+                    "name": "_totalSupply",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
         }
     ];
 
@@ -821,7 +821,7 @@ export class Tab2Page implements OnInit{
           console.log('signed: ', signed);
           this.web3.eth.sendSignedTransaction(signed.rawTransaction).on('error', (error) => {
               console.log('error', error);
-          })
+              })
               .on('transactionHash', (transactionHash) => {
                   console.log('transactionHash', transactionHash);
               })
