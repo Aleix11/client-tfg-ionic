@@ -15,6 +15,7 @@ const routes: Routes = [
             loadChildren: '../tab1/tab1.module#Tab1PageModule'
           },
             { path: 'createBet', loadChildren: './../create-bet/create-bet.module#CreateBetPageModule'},
+            { path: 'bet/:id', loadChildren: './../bet/bet.module#BetPageModule' },
 
         ]
       },

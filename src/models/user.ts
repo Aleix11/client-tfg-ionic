@@ -21,4 +21,8 @@ export class User {
         yourNemesisIs: string;
     };
     wallet: any;
+    selectedAccount: {
+        address: string;
+        privateKey: string;
+    };
 }

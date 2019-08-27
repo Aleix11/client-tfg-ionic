@@ -9,6 +9,7 @@ import {AbiItem} from "web3-utils";
 import {PassUserService} from "../../providers/pass-data-service/passUserService";
 import {PassWalletService} from "../../providers/pass-data-service/passWalletService";
 import {Router} from "@angular/router";
+import {LoadingController, ToastController} from '@ionic/angular';
 
 @Component({
   selector: 'app-tab2',
@@ -629,20 +630,23 @@ export class Tab2Page implements OnInit{
               @Inject(WEB3) private web3: Web3,
               private userService: UserService,
               private chatService: ChatService,
+              private toastController: ToastController,
+              public loadingController: LoadingController,
               private passWalletService: PassWalletService,
               private storage: Storage) {
 
       this.myContract = new web3.eth.Contract(this.abi, this.contractAddress);
-
+      console.log(this.web3, this.myContract);
   }
 
   async ngOnInit() {
 
   }
 
-  async ionViewDidEnter() {
+  ionViewDidEnter() {
       this.storage.get('user').then(user => {
           this.user = user;
+          console.log('user', this.user);
           this.getNumberMessages();
       });
       if(this.wallet === null) {
@@ -661,8 +665,24 @@ export class Tab2Page implements OnInit{
                   });
               }
           });
+      } else {
+          let i = 0;
+          let bool = false;
+          this.arrayAccounts = [];
+          while(!bool){
+              if(this.wallet.accounts[i]) {
+                  this.arrayAccounts.push(this.wallet.accounts[i]);
+                  i++;
+              } else {
+                  bool = true;
+              }
+          }
+          this.user.selectedAccount = {
+              address: this.selectedAccount.address,
+              privateKey: this.selectedAccount.privateKey
+          };
+          this.storage.set('user', this.user);
       }
-
   }
 
   getNumberMessages() {
@@ -677,36 +697,51 @@ export class Tab2Page implements OnInit{
   }
 
   async decryptWalletInfo() {
-      this.wallet = this.web3.eth.accounts.wallet.decrypt(this.walletEncrypt, this.walletPassword);
-      this.walletEncryptBool = false;
-      this.walletDecryptBool = true;
-      let i = 0;
-      let bool = false;
-      while(!bool){
-          if(this.wallet.accounts[i]) {
-              this.arrayAccounts.push(this.wallet.accounts[i]);
-              i++;
-          } else {
-              bool = true;
+      if(this.walletPassword) {
+          try {
+              this.wallet = this.web3.eth.accounts.wallet.decrypt(this.walletEncrypt, this.walletPassword);
+              this.walletEncryptBool = false;
+              this.walletDecryptBool = true;
+              let i = 0;
+              let bool = false;
+              this.arrayAccounts = [];
+              while(!bool){
+                  if(this.wallet.accounts[i]) {
+                      this.arrayAccounts.push(this.wallet.accounts[i]);
+                      i++;
+                  } else {
+                      bool = true;
+                  }
+              }
+              this.selectedAccount = this.wallet.accounts[0];
+              await this.myContract.methods.balanceOf(this.selectedAccount.address).call({from: this.selectedAccount.address})
+                  .then((result) => {
+                      console.log('Result', result);
+                      if(result) {
+                          this.tokens =  parseInt(result._hex, 16);
+                          this.user.selectedAccount = {
+                              address: this.selectedAccount.address,
+                              privateKey: this.selectedAccount.privateKey
+                          };
+                          this.storage.set('user', this.user);
+                      }
+                  });
+          } catch {
+              const toast = await this.toastController.create({
+                  message: 'Wrong password',
+                  duration: 3000,
+                  showCloseButton: true, color: 'dark'
+              });
+              toast.present();
           }
+      } else {
+          const toast = await this.toastController.create({
+              message: 'Enter your password',
+              duration: 3000,
+              showCloseButton: true, color: 'dark'
+          });
+          toast.present();
       }
-      this.selectedAccount = this.wallet.accounts[0];
-      await this.myContract.methods.balanceOf(this.selectedAccount.address).call({from: this.selectedAccount.address})
-          .then((result) => {
-              console.log('Result', result);
-              if(result) {
-                  this.tokens =  parseInt(result._hex, 16);
-              }
-          });
-      /*this.storage.get('token').then( token => {
-          console.log('selectedAccount', this.selectedAccount);
-          this.userService.getNumberTokens(this.selectedAccount.address, token).subscribe(data => {
-              console.log('tokens', data);
-              if(data) {
-                  this.tokens = data.tokens[0];
-              }
-          });
-      });*/
   }
 
   addAccount() {
@@ -714,21 +749,26 @@ export class Tab2Page implements OnInit{
       this.router.navigate(['/menu/tabs/tab2/add-account']);
   }
 
-  categorySelection(event) {
-      console.log('eveent', event);
+  async categorySelection(event) {
       this.selectedAccount = event.detail.value;
-      this.storage.get('token').then(token => {
-          console.log('selectedAccount', this.selectedAccount);
-          this.userService.getNumberTokens(this.selectedAccount.address, token).subscribe(data => {
-              console.log('tokens', data);
-              if(data) {
-                  this.tokens = data.tokens[0];
+      console.log('aquii llega', this.user, this.selectedAccount);
+      this.user.selectedAccount = {
+        address: this.selectedAccount.address,
+        privateKey: this.selectedAccount.privateKey
+      };
+      this.storage.set('user', this.user);
+      await this.myContract.methods.balanceOf(this.selectedAccount.address).call({from: this.selectedAccount.address})
+          .then((result) => {
+              console.log('Result', result);
+              if(result) {
+                  this.tokens =  parseInt(result._hex, 16);
               }
           });
-      });
+
   }
 
   async tokensBuy() {
+      await this.presentLoading();
       let betCreate = this.myContract.methods.buyTokensPassEthers();
       let encodedABI = betCreate.encodeABI();
 
@@ -736,7 +776,9 @@ export class Tab2Page implements OnInit{
 
       let nonceString = nonce.toString(16);
 
-      console.log('wei', this.web3.utils.toWei(''+this.numberTokensBuy / 900, 'ether'));
+      console.log(this.numberTokensBuy / 900);
+      console.log('wei', this.web3.utils.toWei(''+Math.floor(this.numberTokensBuy / 900 * 1000000000000000000) / 1000000000000000000, 'ether'));
+      console.log('nonce', nonce);
       let tx = {
           gas: 1500000,
           gasPrice: '30000000000',
@@ -745,14 +787,15 @@ export class Tab2Page implements OnInit{
           chainId: 3,
           to: this.contractAddress,
           nonce: nonce,
-          value: this.web3.utils.toWei(''+this.numberTokensBuy / 900, 'ether')
+          value: this.web3.utils.toWei(''+Math.floor(this.numberTokensBuy / 900 * 1000000000000000000) / 1000000000000000000, 'ether')
           // nonce: '0x' + nonceString
       };
 
-      this.web3.eth.accounts.signTransaction(tx, this.wallet.accounts[0].privateKey).then(signed => {
+      this.web3.eth.accounts.signTransaction(tx, this.selectedAccount.privateKey).then(signed => {
           console.log('signed: ', signed);
-          this.web3.eth.sendSignedTransaction(signed.rawTransaction).on('error', (error) => {
-              console.log('error', error);
+          this.web3.eth.sendSignedTransaction(signed.rawTransaction).on('error', async (error) => {
+              console.log('error ', error);
+              await this.loading.dismiss();
           })
               .on('transactionHash', (transactionHash) => {
                   console.log('transactionHash', transactionHash);
@@ -760,28 +803,54 @@ export class Tab2Page implements OnInit{
               .on('receipt', async (receipt) => {
                   console.log('receipt', receipt);
               })
-              .on('confirmation', (confirmationNumber, receipt) => {
+              .on('confirmation', async (confirmationNumber, receipt) => {
+                  await this.loading.dismiss();
                   console.log('confirmation', confirmationNumber, receipt);
                   const blockNumber = receipt.blockNumber;
                   this.myContract.getPastEvents('BuyTokensSendEthers', {
                       from: blockNumber,
                       to: blockNumber
-                  }).then((events) => {
+                  }).then(async (events) => {
                       if (events[0]) {
+                          const toast = await this.toastController.create({
+                              message: 'Wait to get your E-bets...',
+                              duration: 3000,
+                              showCloseButton: true, color: 'dark'
+                          });
+                          toast.present();
                           const tokens = parseInt(events[0].returnValues.tokens._hex, 16);
                           console.log('events: ', events[0].returnValues.tokens, tokens);
                           if (tokens) {
                               this.storage.get('token').then(token => {
                                   console.log('1', events[0].returnValues.buyer, this.numberTokensBuy);
-                                  this.userService.buyTokensPassTokens(events[0].returnValues.buyer, this.numberTokensBuy, token).subscribe(data => {
+                                  this.userService.buyTokensPassTokens(events[0].returnValues.buyer, this.numberTokensBuy, token).subscribe(async data => {
+                                      console.log('llega', data);
                                       if(data){
-                                          console.log(data);
+                                          await this.myContract.methods.balanceOf(this.selectedAccount.address).call({from: this.selectedAccount.address})
+                                              .then(async (result) => {
+                                                  console.log('Result', result);
+                                                  if(result) {
+                                                      this.tokens =  parseInt(result._hex, 16);
+                                                      const toast = await this.toastController.create({
+                                                          message: 'E-bets bought and added to your account',
+                                                          duration: 3000,
+                                                          showCloseButton: true, color: 'dark'
+                                                      });
+                                                      toast.present();
+                                                  }
+                                              });
                                       }
                                   });
                               });
                           }
                       } else {
                           console.log('no events');
+                          const toast = await this.toastController.create({
+                              message: 'There was an error, repeat the operation',
+                              duration: 3000,
+                              showCloseButton: true, color: 'dark'
+                          });
+                          toast.present();
                       }
                   });
 
@@ -795,9 +864,11 @@ export class Tab2Page implements OnInit{
                   }
               });
       });
+
   }
 
   async tokensSell() {
+      await this.presentLoading();
       let betCreate = this.myContract.methods.sellTokensPassTokens(this.numberTokensSell);
       let encodedABI = betCreate.encodeABI();
 
@@ -819,8 +890,15 @@ export class Tab2Page implements OnInit{
 
       this.web3.eth.accounts.signTransaction(tx, this.wallet.accounts[0].privateKey).then(signed => {
           console.log('signed: ', signed);
-          this.web3.eth.sendSignedTransaction(signed.rawTransaction).on('error', (error) => {
-              console.log('error', error);
+          this.web3.eth.sendSignedTransaction(signed.rawTransaction).on('error', async (error) => {
+                  console.log('error', error);
+                  await this.loading.dismiss();
+                  const toast = await this.toastController.create({
+                      message: 'Error: make sure you have enough gas',
+                      duration: 3000,
+                      showCloseButton: true, color: 'dark'
+                  });
+                  toast.present();
               })
               .on('transactionHash', (transactionHash) => {
                   console.log('transactionHash', transactionHash);
@@ -828,28 +906,54 @@ export class Tab2Page implements OnInit{
               .on('receipt', async (receipt) => {
                   console.log('receipt', receipt);
               })
-              .on('confirmation', (confirmationNumber, receipt) => {
+              .on('confirmation', async (confirmationNumber, receipt) => {
+                  await this.loading.dismiss();
                   console.log('confirmation', confirmationNumber, receipt);
                   const blockNumber = receipt.blockNumber;
                   this.myContract.getPastEvents('SellTokensSendTokens', {
                       from: blockNumber,
                       to: blockNumber
-                  }).then((events) => {
+                  }).then(async (events) => {
                       if (events[0]) {
+                          const toast = await this.toastController.create({
+                              message: 'Wait to get your ethers...',
+                              duration: 3000,
+                              showCloseButton: true, color: 'dark'
+                          });
+                          toast.present();
                           const tokens = parseInt(events[0].returnValues.tokens._hex, 16);
                           console.log('events: ', events[0].returnValues.tokens, tokens);
                           if (tokens) {
                               this.storage.get('token').then(token => {
                                   console.log('1', events[0].returnValues.buyer, this.numberTokensSell);
-                                  this.userService.sellTokensPassEthers(events[0].returnValues.seller, this.numberTokensSell, token).subscribe(data => {
+                                  this.userService.sellTokensPassEthers(events[0].returnValues.seller, this.numberTokensSell, token).subscribe(async data => {
                                       if(data){
                                           console.log(data);
+                                          await this.myContract.methods.balanceOf(this.selectedAccount.address).call({from: this.selectedAccount.address})
+                                              .then(async (result) => {
+                                                  console.log('Result', result);
+                                                  if(result) {
+                                                      this.tokens =  parseInt(result._hex, 16);
+                                                      const toast = await this.toastController.create({
+                                                          message: 'E-bets sold and subtracted from your account',
+                                                          duration: 3000,
+                                                          showCloseButton: true, color: 'dark'
+                                                      });
+                                                      toast.present();
+                                                  }
+                                              });
                                       }
                                   });
                               });
                           }
                       } else {
                           console.log('no events');
+                          const toast = await this.toastController.create({
+                              message: 'There was an error, repeat the operation',
+                              duration: 3000,
+                              showCloseButton: true, color: 'dark'
+                          });
+                          toast.present();
                       }
                   });
 
@@ -865,4 +969,12 @@ export class Tab2Page implements OnInit{
               });
       });
   }
+
+    async presentLoading() {
+        this.loading = await this.loadingController.create({
+            message: 'Please wait...',
+            cssClass: 'custom-class custom-loading'
+        });
+        await this.loading.present();
+    }
 }

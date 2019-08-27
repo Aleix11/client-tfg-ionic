@@ -12,14 +12,14 @@ import {WEB3} from "../web3";
   templateUrl: './menu.page.html',
   styleUrls: ['./menu.page.scss'],
 })
-export class MenuPage {
+export class MenuPage implements OnInit {
 
     selectedPath = '';
     user: User = new User();
     constructor(private router: Router,
                 @Inject(WEB3) private web3: Web3,
                 private storage: Storage,
-                private push: Push,
+                //private push: Push,
                 private menu: MenuController) {
         this.storage.get('user').then(user => {
             this.user = user;
@@ -37,7 +37,7 @@ export class MenuPage {
 
         this.menu.enable(true, 'custom');
 
-        // to check if we have permission
+        /*// to check if we have permission
         this.push.hasPermission()
             .then((res: any) => {
 
@@ -87,10 +87,23 @@ export class MenuPage {
 
         pushObject.on('error').subscribe(error => console.error('Error with Push plugin', error));
 
+*/
+    }
 
+    async ngOnInit() {
 
+    }
 
+    ionViewDidEnter() {
+        this.storage.get('user').then(user => {
+            this.user = user;
+            console.log('user', this.user);
+        });
+    }
 
+    goToProfile() {
+        this.menu.toggle();
+        this.router.navigate(['/menu/tabs/tab5']);
     }
 
     openCustom() {

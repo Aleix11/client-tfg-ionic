@@ -12,8 +12,6 @@ import {WEB3} from '../web3';
 import {AbiItem} from 'web3-utils';
 import {ModalPasswordPage} from './modal-password/modal-password.page';
 import Web3 from 'web3';
-import {__await} from 'tslib';
-
 
 @Component({
   selector: 'app-create-bet',
@@ -642,19 +640,37 @@ export class CreateBetPage implements OnInit {
               private toastController: ToastController,
               private betService: BetService,
               private userService: UserService) {
-      this.storage.get('user').then(user => {
-          this.user = user;
-          if (!this.user.address) {
-              // reedirect to wallet to take an account
-          } else {
-              this.getTokens(this.user.address);
-          }
-      });
 
       console.log(this.contractAddress);
       this.myContract = new web3.eth.Contract(this.abi, this.contractAddress);
 
       console.log(this.myContract);
+
+  }
+
+  ngOnInit() {
+
+  }
+
+  ionViewDidEnter() {
+      this.storage.get('user').then(async user => {
+          this.user = user;
+          console.log(this.user, !this.user.selectedAccount,!this.user.selectedAccount || !this.user.selectedAccount.address || !this.user.selectedAccount.privateKey);
+          if (!this.user.selectedAccount || !this.user.selectedAccount.address || !this.user.selectedAccount.privateKey) {
+              // reedirect to wallet to take an account
+              this.router.navigate(['/menu/tabs/tab1']);
+              this.router.navigate(['/menu/tabs/tab2']);
+              const toast = await this.toastController.create({
+                  message: 'Unlock wallet before create a bet',
+                  duration: 3000,
+                  showCloseButton: true, color: 'dark'
+              });
+              toast.present();
+          } else {
+              this.getTokens(this.user.selectedAccount.address);
+          }
+      });
+
 
       this.storage.get('wallet').then(wallet => {
           if (wallet) {
@@ -670,9 +686,6 @@ export class CreateBetPage implements OnInit {
       });
   }
 
-  ngOnInit() {
-  }
-
   async getTokens(address) {
       await this.myContract.methods.balanceOf(address).call({from: address})
           .then((result) => {
@@ -683,27 +696,48 @@ export class CreateBetPage implements OnInit {
           });
   }
 
-  searchSummoner() {
+  async searchSummoner() {
     console.log('bet', this.bet.summoner);
     if (this.bet.summoner) {
+        await this.presentLoading();
         this.storage.get('token').then(token => {
             this.summonerService.searchSummoner({
                 summonerName: this.bet.summoner
-            }, token).subscribe(game => {
+            }, token).subscribe( game => {
                 console.log(game);
+                setTimeout(async () => {
+                    await this.loading.dismiss();
+                });
                 if (game) {
                     this.game = game;
                     this.clock();
                     this.step = 1;
                 }
-            }, err => {
+            }, async err => {
                 console.log(err);
+                setTimeout(async () => {
+                    await this.loading.dismiss();
+                });
+
+                const toast = await this.toastController.create({
+                    message: `${this.bet.summoner} is not playing any game`,
+                    duration: 3000,
+                    showCloseButton: true, color: 'dark'
+                });
+                toast.present();
             });
         });
+    } else {
+        const toast = await this.toastController.create({
+            message: 'Write a Summoner name',
+            duration: 3000,
+            showCloseButton: true, color: 'dark'
+        });
+        toast.present();
     }
   }
 
-  changeTeam(team) {
+  changeTeam(team, event) {
       if (team === 'teamA') {
           this.checkBoxList[0].isChecked = true;
           this.checkBoxList[1].isChecked = false;
@@ -738,7 +772,7 @@ export class CreateBetPage implements OnInit {
 
   async createBet() {
       this.bet.bettor1 = this.user.username;
-      this.bet.addressBettor1 = this.user.address;
+      this.bet.addressBettor1 = this.user.selectedAccount['address'];
       this.bet.gameId = this.game._id;
       const betObject = {
         bet: this.bet,
@@ -776,10 +810,10 @@ export class CreateBetPage implements OnInit {
                   await this.presentLoading();
                   console.log('wallet modal', data);
                   this.wallet = data.data;
-                  console.log(this.wallet.accounts[0].privateKey);
+                  console.log(this.user.selectedAccount.privateKey);
                   // Fer find de la address del objecte user amb les addres de la wallet
 
-                  this.web3.eth.accounts.signTransaction(tx, this.wallet.accounts[0].privateKey).then(signed => {
+                  this.web3.eth.accounts.signTransaction(tx, this.user.selectedAccount.privateKey).then(signed => {
                       console.log('signed: ', signed);
                       this.web3.eth.sendSignedTransaction(signed.rawTransaction).on('error', (error) => {
                           console.log('error', error);
@@ -838,15 +872,16 @@ export class CreateBetPage implements OnInit {
                                                           });
                                                           toast.present();
                                                           this.router.navigate(['/menu/tabs/tab1']);
+                                                          this.step = 0;
+                                                          this.bet = new Bet();
+
                                                       }
                                                   });
                                               });
                                           }
-                                      }, 2000);
+                                      }, 2500);
                                   }
                               });
-
-
                           })
                           .then((newContractInstance) => {
                               console.log('contractInstance', newContractInstance); // instance with the new contract address
@@ -1023,6 +1058,7 @@ export class CreateBetPage implements OnInit {
             case 498: return 'Xayah'; break;
             case 141: return 'Kayn'; break;
             case 350: return 'Yuumi'; break;
+            case 246: return 'Qiyana'; break;
         }
   }
 }

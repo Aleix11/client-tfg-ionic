@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {UserService} from "../../providers/userService";
 import {User} from "../../models/user";
 import {ChatService} from "../../providers/chatService";
@@ -9,13 +9,14 @@ import Web3 from "web3";
 import {WEB3} from "../web3";
 import {AbiItem} from "web3-utils";
 import {ModalPasswordTwoPage} from './modal-password-two/modal-password-two.page';
+import {type} from 'os';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page {
+export class Tab1Page implements OnInit {
 
   user: User = new User();
   numberMsg: number = 0;
@@ -30,6 +31,8 @@ export class Tab1Page {
   myContract: any;
 
   loading: any;
+
+  now: number;
 
   abi : AbiItem[] = [
       {
@@ -628,12 +631,18 @@ export class Tab1Page {
       this.myContract = new web3.eth.Contract(this.abi, this.contractAddress);
   }
 
+  ngOnInit() {
+
+  }
+
   ionViewDidEnter() {
       this.storage.get('user').then(user => {
           this.user = user;
+          console.log('user: ', this.user);
           this.getNumberMessages();
           this.getBets();
       });
+      this.dateNow();
   }
 
   getNumberMessages() {
@@ -664,9 +673,8 @@ export class Tab1Page {
   }
 
   async closeBet(bet) {
-
       console.log('tokens: ', bet.tokens);
-      const betCreate = this.myContract.methods.betCloseFromPendingCancelBet(bet.tokens, bet.id);
+      /*const betCreate = this.myContract.methods.betCloseFromPendingCancelBet(bet.tokens, bet.id);
       const encodedABI = betCreate.encodeABI();
 
       const nonce = await this.web3.eth.getTransactionCount(bet.addressBettor1);
@@ -727,19 +735,50 @@ export class Tab1Page {
 
           });
 
-      await modal.present();
+      await modal.present();*/
 
-      //TODO: TEST BETCLOSEFROMPENDING
+      const alert = await this.alertController.create({
+          header: 'Are you sure you want to cancel this bet?',cssClass: 'black',
+          buttons: [
+              {
+                  text: 'Cancel', cssClass: 'black',
+                  handler: () => {
 
-      /*this.storage.get('token').then(token => {
-          this.betService.closeBet(bet, token).subscribe(pendingBets => {
-              if(pendingBets) {
-                  this.pendingBets = pendingBets;
+                  }
+              }, {
+                  text: 'Yes',cssClass: 'black',
+                  handler: async () => {
+                      console.log('bet: ', bet);
+                      await this.presentLoading();
+                      this.storage.get('token').then(token => {
+                          this.betService.closeBet(bet, token).subscribe(async pendingBets => {
+                              setTimeout(async () => {
+                                  await this.loading.dismiss();
+                              }, 500);
+                              if(pendingBets) {
+                                  this.pendingBets = pendingBets;
+                              }
+                          })
+                      });
+                  }
               }
-          })
-      });*/
+          ]
+      });
+      await alert.present();
+
   }
 
+  duration(timestamp) {
+      let time = Math.trunc(timestamp) - Math.trunc(this.now);
+      let date : Date = new Date(time);
+      return date;
+  }
+
+  dateNow() {
+      setInterval(() => {
+          this.now = Math.trunc(Date.now() / 1000);
+      });
+  }
 
     async presentLoading() {
         this.loading = await this.loadingController.create({

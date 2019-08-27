@@ -10,7 +10,8 @@ const httpOptions = {
 export class SummonerService {
 
     // URL to web api
-    private summonersUrl: string = 'http://localhost:3000/summoners';
+    // private summonersUrl: string = 'http://localhost:3000/summoners';
+    private summonersUrl: string = 'http://192.168.0.16:3000/summoners';
 
     constructor(public http: HttpClient) {
     }

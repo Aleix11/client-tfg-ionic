@@ -636,23 +636,34 @@ export class BetPage implements OnInit {
   }
 
   ngOnInit() {
-      this.storage.get('user').then(user => {
+
+  }
+
+  ionViewDidEnter() {
+      this.storage.get('user').then(async user => {
           this.user = user;
-          if(!this.user.address) {
-              // reedirect to wallet to take an account
+          if (!this.user.selectedAccount || !this.user.selectedAccount.address || !this.user.selectedAccount.privateKey) {
+              this.router.navigate(['/menu/tabs/tab1']);
+              this.router.navigate(['/menu/tabs/tab2']);
+              const toast = await this.toastController.create({
+                  message: 'Unlock wallet before create a bet',
+                  duration: 3000,
+                  showCloseButton: true, color: 'dark'
+              });
+              toast.present();
           }
       });
       let id = this.route.snapshot.paramMap.get('id');
       this.storage.get('token').then(token => {
-        this.betService.getBet({id: id}, token).subscribe(response => {
-          this.bet = response.bet;
-          if(this.bet.duration > Date.now()/1000){
-              this.clock();
-          }
-          this.bet.duration = (this.bet.duration - Math.floor(Date.now()/1000))/60;
-          this.game = response.game;
-          console.log(this.bet, this.game);
-        })
+          this.betService.getBet({id: id}, token).subscribe(response => {
+              this.bet = response.bet;
+              if(this.bet.duration > Date.now()/1000){
+                  this.clock();
+              }
+              this.bet.duration = (this.bet.duration - Math.floor(Date.now()/1000))/60;
+              this.game = response.game;
+              console.log(this.bet, this.game);
+          })
       });
   }
 
@@ -671,7 +682,7 @@ export class BetPage implements OnInit {
   }
   async acceptBet() {
       this.bet.bettor2 = this.user.username;
-      this.bet.addressBettor2 = this.user.address;
+      this.bet.addressBettor2 = this.user.selectedAccount.address;
       console.log('teeam', this.bet.teamBettor1);
       if(this.bet.teamBettor1 === 'Team A') {
           this.bet.teamBettor2 = 'Team B';
@@ -714,10 +725,10 @@ export class BetPage implements OnInit {
                   await this.presentLoading();
                   console.log('wallet modal', data);
                   this.wallet = data.data;
-                  console.log(this.wallet.accounts[0].privateKey);
+                  console.log(this.user.selectedAccount.privateKey);
                   // Fer find de la address del objecte user amb les addres de la wallet
 
-                  this.web3.eth.accounts.signTransaction(tx, this.wallet.accounts[0].privateKey).then(signed => {
+                  this.web3.eth.accounts.signTransaction(tx, this.user.selectedAccount.privateKey).then(signed => {
                       console.log('signed: ', signed);
                       this.web3.eth.sendSignedTransaction(signed.rawTransaction).on('error', (error) => {
                           console.log('error', error);
@@ -737,7 +748,8 @@ export class BetPage implements OnInit {
                               }).then((events) => {
                                   console.log(events);
                                   if(events[0]) {
-                                      setTimeout(() => {
+                                      setTimeout(async () => {
+                                          await this.loading.dismiss();
                                           let betId = parseInt(events[0].returnValues.id._hex, 16);
                                           console.log('events: ', events[0].returnValues.id._hex, betId);
                                           if (betId) {
@@ -745,8 +757,6 @@ export class BetPage implements OnInit {
                                                   this.betService.acceptBet(bet, token).subscribe(async bet => {
                                                       console.log(bet);
                                                       if (bet) {
-                                                          await this.loading.dismiss();
-
                                                           // APOSTA ACCEPTA
                                                           const toast = await this.toastController.create({
                                                               message: 'Bet accepted',

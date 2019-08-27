@@ -48,9 +48,6 @@
             </ion-col>
         </ion-row>
     </ion-grid>
-    <!--<ion-grid *ngIf="nonWalletBool">-->
-
-    <!--</ion-grid>-->
     <ion-grid *ngIf="walletDecryptBool">
         <ion-row>
             <ion-col size="10">
@@ -79,7 +76,7 @@
             </ion-col>
             <ion-col size="12" text-center>
                 <ion-label>
-                    TOKENS
+                    E-bets
                 </ion-label>
             </ion-col>
         </ion-row>
@@ -109,7 +106,7 @@
             <ion-row>
                 <ion-col size="12" text-center no-margin>
                     <ion-label>
-                        Write nº tokens to buy
+                        Write nº E-bets to buy
                     </ion-label>
                 </ion-col>
             </ion-row>
@@ -147,14 +144,14 @@
         </ion-grid>
 
         <ion-grid *ngIf="sellTokens">
-            <ion-row>
+            <ion-row *ngIf="tokens && tokens != 0">
                 <ion-col size="12" text-center no-margin>
                     <ion-label>
                         Select nº tokens to sell
                     </ion-label>
                 </ion-col>
             </ion-row>
-            <ion-row>
+            <ion-row *ngIf="tokens && tokens != 0">
                 <ion-col size="12">
                     <ion-range min="0" [max]="tokens"
                                pin="true" [(ngModel)]="numberTokensSell">
@@ -163,27 +160,32 @@
                     </ion-range>
                 </ion-col>
             </ion-row>
-            <ion-row>
+            <ion-row *ngIf="tokens && tokens != 0">
                 <ion-col size="12" text-center>
                     <ion-label>
-                        {{numberTokensSell / 1000 | number: '1.0-5'}} ethers
+                        {{numberTokensSell}} E-bets - {{numberTokensSell / 1000 | number: '1.0-5'}} ethers
                     </ion-label>
                 </ion-col>
             </ion-row>
-            <ion-row>
+            <ion-row *ngIf="tokens && tokens != 0">
                 <ion-col size="12" text-center no-margin>
                     <ion-label class="small-font">
                         1 eth = 1000 E-bets; It will charge the tx fee
                     </ion-label>
                 </ion-col>
             </ion-row>
-            <ion-row>
+            <ion-row *ngIf="tokens && tokens != 0">
                 <ion-col>
                     <ion-button (click)="tokensSell()"
                                 expand="block"
                                 fill="outline">
                         Sell Tokens
                     </ion-button>
+                </ion-col>
+            </ion-row>
+            <ion-row *ngIf="!tokens || (tokens && tokens == 0)">
+                <ion-col size="12" text-center>
+                         You don't have any E-bets to sell
                 </ion-col>
             </ion-row>
         </ion-grid>

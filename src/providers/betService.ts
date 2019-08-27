@@ -11,7 +11,8 @@ const httpOptions = {
 export class BetService {
 
     // URL to web api
-    private betsUrl: string = 'http://localhost:3000/bets';
+    //private betsUrl: string = 'http://localhost:3000/bets';
+    private betsUrl: string = 'http://192.168.0.16:3000/bets';
 
     constructor(public http: HttpClient) {
     }
@@ -38,6 +39,12 @@ export class BetService {
         httpOptions.headers = httpOptions.headers.delete("Authorization");
         httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
         return this.http.post<any>(`${this.betsUrl}/accept`, bet, httpOptions);
+    }
+
+    closeBet(bet, tkn): Observable<any> {
+        httpOptions.headers = httpOptions.headers.delete("Authorization");
+        httpOptions.headers = httpOptions.headers.append("Authorization", tkn);
+        return this.http.post<any>(`${this.betsUrl}/closeFromPending`, {bet: bet}, httpOptions);
     }
 
     getBetsFromUser(user, tkn) : Observable<any> {

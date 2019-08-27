@@ -21,7 +21,7 @@
         <ion-row>
             <ion-col size="2" padding text-center>
                 <ion-avatar text-center (click)="presentModal()">
-                    <img src="../../assets/icon/favicon.png" height="64" width="64"/>
+                    <img src="{{user?.profilePhoto}}" height="64" width="64"/>
                     <ion-badge color="danger"
                                style="position: absolute; margin-left: -10px; padding-left: 4px; padding-right: 4px;">
                         <ion-icon name="brush"></ion-icon>
@@ -141,14 +141,14 @@
         </ion-row>
     </ion-grid>
     <ion-grid *ngIf="segment==='statics'" padding>
-        <ion-row>
+        <ion-row *ngIf="bets && bets.length !=0">
             <ion-col size="12" text-center no-padding>
                 <ion-label>
                     TOTAL BETS: {{bets.length}}
                 </ion-label>
             </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row *ngIf="bets && bets.length !=0">
             <ion-col size="12" text-center padding>
                 <div>
                     <div>
@@ -166,22 +166,22 @@
                 </div>
             </ion-col>
         </ion-row>
-        <ion-row>
-            <ion-col size="6">
+        <ion-row *ngIf="bets && bets.length !=0">
+            <ion-col size="6" *ngIf="user.stats && user.stats.ratioWinLose">
                 <ion-row>
                     <ion-col text-center>
-                        {{user.stats.ratioWinLose}}
+                        {{user.stats.ratioWinLose * 100 | number: '2.0-0'}} %
                     </ion-col>
                 </ion-row>
                 <ion-row>
                     <ion-col text-center no-padding>
                         <p class="small-font">
-                            WIN / LOSE RATIO
+                            WIN / LOSE %
                         </p>
                     </ion-col>
                 </ion-row>
             </ion-col>
-            <ion-col size="6">
+            <ion-col size="6" *ngIf="user.stats && user.stats.userMostBets">
                 <ion-row>
                     <ion-col text-center>
                         {{user.stats.userMostBets}}
@@ -196,8 +196,8 @@
                 </ion-row>
             </ion-col>
         </ion-row>
-        <ion-row>
-            <ion-col size="6">
+        <ion-row *ngIf="bets && bets.length !=0">
+            <ion-col size="6" *ngIf="user.stats && user.stats.yourNemesisIs">
                 <ion-row>
                     <ion-col text-center>
                         {{user.stats.yourNemesisIs}}
@@ -211,7 +211,7 @@
                     </ion-col>
                 </ion-row>
             </ion-col>
-            <ion-col size="6">
+            <ion-col size="6" *ngIf="user.stats && user.stats.youAreNemesisOf">
                 <ion-row>
                     <ion-col text-center>
                         {{user.stats.youAreNemesisOf}}
@@ -224,6 +224,13 @@
                         </p>
                     </ion-col>
                 </ion-row>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngIf="!bets || (bets && bets.length == 0)">
+            <ion-col size="12" text-center no-padding>
+                <ion-label>
+                    You haven't played any games
+                </ion-label>
             </ion-col>
         </ion-row>
     </ion-grid>

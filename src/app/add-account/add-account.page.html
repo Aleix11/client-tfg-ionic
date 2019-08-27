@@ -17,8 +17,15 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid>
-    <ion-row *ngIf="showPassWallet">
+  <ion-grid *ngIf="showPassWallet">
+    <ion-row>
+      <ion-col text-center margin-top>
+        <ion-label>
+          Introduce your Wallet password:
+        </ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
       <ion-col>
         <ion-item no-padding margin-start margin-end>
           <ion-label position="floating">
@@ -29,7 +36,7 @@
         </ion-item>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="showPassWallet">
+    <ion-row>
       <ion-col>
         <ion-button margin-start
                     margin-end
@@ -70,6 +77,14 @@
                     fill="outline">
           Import Account
         </ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col text-center>
+        <h5 text-center>Your accounts</h5>
+        <ion-label class="small-font" *ngFor="let account of accounts">
+          {{account}}
+        </ion-label>
       </ion-col>
     </ion-row>
     <ion-row *ngIf="showSaveWallet" margin-top>

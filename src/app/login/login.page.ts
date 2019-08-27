@@ -22,6 +22,7 @@ export class LoginPage implements OnInit {
   logIn() {
     this.userService.login(this.user).subscribe(user => {
       if(user) {
+          console.log(user);
           this.storage.set('token', user.token);
           this.storage.set('user', user);
         this.router.navigate(['/menu/tabs/tab1'])

@@ -54,7 +54,7 @@
           <div *ngFor="let participant of game.participants">
             <ion-item *ngIf="participant.team === 100">
               <ion-avatar margin-end>
-                <img src='https://ddragon.leagueoflegends.com/cdn/9.11.1/img/champion/{{createBetPage.champions(participant.championId)}}.png'>
+                <img src='https://ddragon.leagueoflegends.com/cdn/9.16.1/img/champion/{{createBetPage.champions(participant.championId)}}.png'>
               </ion-avatar>
               <p class="summoners-name">{{participant.summonerName}}</p>
             </ion-item>
@@ -69,7 +69,7 @@
           <div *ngFor="let participant of game.participants">
             <ion-item *ngIf="participant.team === 200">
               <ion-avatar margin-end>
-                <img src='https://ddragon.leagueoflegends.com/cdn/9.11.1/img/champion/{{createBetPage.champions(participant.championId)}}.png'>
+                <img src='https://ddragon.leagueoflegends.com/cdn/9.16.1/img/champion/{{createBetPage.champions(participant.championId)}}.png'>
               </ion-avatar>
               <p class="summoners-name">{{participant.summonerName}}</p>
             </ion-item>
@@ -84,28 +84,28 @@
         </ion-label>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="bet.duration && bet.duration >= 0">
       <ion-col text-center margin-top>
         <ion-label>
           Bet duration: {{bet?.duration | number: '1.0-0'}} min
         </ion-label>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="bet.state === 'pending'">
       <ion-col text-center>
         <ion-label>
           Your address:
         </ion-label>
       </ion-col>
     </ion-row>
-    <ion-row>
+    <ion-row *ngIf="bet.state === 'pending'">
       <ion-col text-center no-padding>
         <ion-label class="small-font">
           {{user.address}}
         </ion-label>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="user.username !== bet.bettor1">
+    <ion-row *ngIf="user.username !== bet.bettor1 && bet.state === 'pending'">
       <ion-col>
         <div text-center>
           <ion-button (click)="acceptBet()"
@@ -116,7 +116,7 @@
         </div>
       </ion-col>
     </ion-row>
-    <ion-row *ngIf="user.username === bet.bettor1">
+    <ion-row *ngIf="user.username === bet.bettor1 && bet.state === 'pending'">
       <ion-col text-center margin-top>
         <ion-label class="summoners-name">
           You can't accept a Bet that you have created...

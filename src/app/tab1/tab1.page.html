@@ -41,7 +41,7 @@
                     <ion-item *ngFor="let bet of openBets">
                         <ion-grid no-padding [routerLink]="['bet', bet._id]">
                             <ion-row>
-                                <ion-col size="3">
+                                <ion-col size="3" no-padding>
                                     <ion-row>
                                         <ion-col text-center>
                                             {{bet.bettor1}}
@@ -55,7 +55,7 @@
                                         </ion-col>
                                     </ion-row>
                                 </ion-col>
-                                <ion-col size="3">
+                                <ion-col size="3" no-padding>
                                     <ion-row>
                                         <ion-col text-center>
                                             {{bet.tokens}}
@@ -69,7 +69,7 @@
                                         </ion-col>
                                     </ion-row>
                                 </ion-col>
-                                <ion-col size="3">
+                                <ion-col size="6" no-padding>
                                     <ion-row>
                                         <ion-col text-center>
                                             {{bet.bettor2}}
@@ -100,7 +100,9 @@
                     <ion-item *ngFor="let bet of pendingBets" no-padding>
                         <ion-grid no-padding>
                             <ion-row>
-                                <ion-col size="3" [routerLink]="['bet', bet._id]">
+                                <ion-col size="3"
+                                         no-padding
+                                         [routerLink]="['bet', bet._id]">
                                     <ion-row>
                                         <ion-col text-center>
                                             {{bet.tokens}}
@@ -114,13 +116,15 @@
                                         </ion-col>
                                     </ion-row>
                                 </ion-col>
-                                <ion-col size="3" [routerLink]="['bet', bet._id]">
+                                <ion-col size="3" no-padding
+                                         [routerLink]="['bet', bet._id]">
                                     <ion-row>
-                                        <ion-col *ngIf="bet.duration >= 1" text-center>
-                                            {{ bet?.duration.toFixed(0) }}
+                                        <ion-col *ngIf="(bet?.duration.toFixed(0) - now) >= 1" text-center>
+                                            {{ duration(bet?.duration.toFixed(0)) | date: 'mm:ss' }}
                                         </ion-col>
-                                        <ion-col *ngIf="bet.duration === 0" text-center>
-                                            {{ bet?.duration.toFixed(0) }}
+                                        <ion-col class="medium-font"
+                                                 *ngIf="(bet?.duration.toFixed(0) - now) <= 0" text-center>
+                                             FINISHED*
                                         </ion-col>
                                     </ion-row>
                                     <ion-row>
@@ -131,7 +135,8 @@
                                         </ion-col>
                                     </ion-row>
                                 </ion-col>
-                                <ion-col size="5" [routerLink]="['bet', bet._id]">
+                                <ion-col size="5" no-padding
+                                         [routerLink]="['bet', bet._id]">
                                     <ion-row>
                                         <ion-col text-center>
                                             {{bet.bettor1}}
@@ -145,8 +150,12 @@
                                         </ion-col>
                                     </ion-row>
                                 </ion-col>
-                                <ion-col size="1">
-                                    <ion-button (click)="closeBet(bet)">
+                                <ion-col size="1" no-padding
+                                         *ngIf="(bet?.duration.toFixed(0) - now) >= 1">
+                                    <ion-button no-padding
+                                                (click)="closeBet(bet)"
+                                                class="ion-margin-top red"
+                                                fill="clear">
                                         <ion-icon slot="icon-only" name="close"></ion-icon>
                                     </ion-button>
                                 </ion-col>
