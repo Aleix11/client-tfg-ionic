@@ -5,7 +5,7 @@ export const WEB3 = new InjectionToken<Web3>('web3', {
     providedIn: 'root',
     factory: () => {
         try {
-            const provider = new Web3.providers.HttpProvider("http://192.168.0.16:8545");
+            const provider = new Web3.providers.HttpProvider("http://147.83.118.30:8545");
             return new Web3(provider);
         } catch (err) {
             throw new Error('Non detected!');

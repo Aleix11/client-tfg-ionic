@@ -11,8 +11,10 @@ const httpOptions = {
 export class ChatService {
 
     // URL to web api
-    //private chatsUrl: string = 'http://localhost:3000/chats';
-    private chatsUrl: string = 'http://192.168.0.16:3000/chats';
+    // private chatsUrl: string = 'http://localhost:3000/chats';
+    private chatsUrl: string = 'http://147.83.118.30:3000/chats';
+    // private chatsUrl: string = 'http://192.168.1.48:3000/chats';
+
 
     constructor(public http: HttpClient) {
     }

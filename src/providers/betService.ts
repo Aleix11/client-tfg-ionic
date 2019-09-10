@@ -11,8 +11,9 @@ const httpOptions = {
 export class BetService {
 
     // URL to web api
-    //private betsUrl: string = 'http://localhost:3000/bets';
-    private betsUrl: string = 'http://192.168.0.16:3000/bets';
+    // private betsUrl: string = 'http://localhost:3000/bets';
+    private betsUrl: string = 'http://147.83.118.30:3000/bets';
+    // private betsUrl: string = 'http://192.168.1.48:3000/bets';
 
     constructor(public http: HttpClient) {
     }

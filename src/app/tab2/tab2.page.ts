@@ -713,12 +713,15 @@ export class Tab2Page implements OnInit{
                       bool = true;
                   }
               }
+              console.log('tokens: ', this.tokens);
               this.selectedAccount = this.wallet.accounts[0];
+              console.log('tokens: ', this.tokens, this.selectedAccount, this.myContract);
               await this.myContract.methods.balanceOf(this.selectedAccount.address).call({from: this.selectedAccount.address})
                   .then((result) => {
                       console.log('Result', result);
                       if(result) {
                           this.tokens =  parseInt(result._hex, 16);
+                          console.log('tokens: ', this.tokens);
                           this.user.selectedAccount = {
                               address: this.selectedAccount.address,
                               privateKey: this.selectedAccount.privateKey

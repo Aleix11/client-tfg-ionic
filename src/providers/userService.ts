@@ -12,7 +12,8 @@ export class UserService {
 
     // URL to web api
     // private usersUrl: string = 'http://localhost:3000/users';
-    private usersUrl: string = 'http://192.168.0.16:3000/users';
+    private usersUrl: string = 'http://147.83.118.30:3000/users';
+    // private usersUrl: string = 'http://192.168.1.48:3000/users';
 
     constructor(public http: HttpClient) {
     }
