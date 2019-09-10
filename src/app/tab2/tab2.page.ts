@@ -896,12 +896,12 @@ export class Tab2Page implements OnInit{
           this.web3.eth.sendSignedTransaction(signed.rawTransaction).on('error', async (error) => {
                   console.log('error', error);
                   await this.loading.dismiss();
-                  const toast = await this.toastController.create({
+                  /*const toast = await this.toastController.create({
                       message: 'Error: make sure you have enough gas',
                       duration: 3000,
                       showCloseButton: true, color: 'dark'
                   });
-                  toast.present();
+                  toast.present();*/
               })
               .on('transactionHash', (transactionHash) => {
                   console.log('transactionHash', transactionHash);

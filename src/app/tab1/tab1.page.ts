@@ -662,6 +662,9 @@ export class Tab1Page implements OnInit {
             if(data) {
                 this.pendingBets = data;
                 console.log(this.pendingBets);
+                this.pendingBets.forEach(bet => {
+                    bet.duration = (bet.duration - Math.floor(Date.now()/1000))/60;
+                });
             }
         });
         this.betService.getBetsOpenFromUser(this.user, token).subscribe((data) => {

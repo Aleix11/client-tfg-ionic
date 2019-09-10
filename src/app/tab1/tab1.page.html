@@ -64,7 +64,7 @@
                                     <ion-row>
                                         <ion-col text-center no-padding>
                                             <p class="small-font">
-                                                TOKENS
+                                                E-bet
                                             </p>
                                         </ion-col>
                                     </ion-row>
@@ -111,7 +111,7 @@
                                     <ion-row>
                                         <ion-col text-center no-padding>
                                             <p class="small-font">
-                                                TOKENS
+                                                E-bet
                                             </p>
                                         </ion-col>
                                     </ion-row>
@@ -119,11 +119,11 @@
                                 <ion-col size="3" no-padding
                                          [routerLink]="['bet', bet._id]">
                                     <ion-row>
-                                        <ion-col *ngIf="(bet?.duration.toFixed(0) - now) >= 1" text-center>
-                                            {{ duration(bet?.duration.toFixed(0)) | date: 'mm:ss' }}
+                                        <ion-col *ngIf="bet?.duration.toFixed(0) >= 1" text-center>
+                                            {{ bet?.duration.toFixed(0) }} min
                                         </ion-col>
                                         <ion-col class="medium-font"
-                                                 *ngIf="(bet?.duration.toFixed(0) - now) <= 0" text-center>
+                                                 *ngIf="bet?.duration.toFixed(0) <= 0" text-center>
                                              FINISHED*
                                         </ion-col>
                                     </ion-row>
@@ -151,7 +151,7 @@
                                     </ion-row>
                                 </ion-col>
                                 <ion-col size="1" no-padding
-                                         *ngIf="(bet?.duration.toFixed(0) - now) >= 1">
+                                         *ngIf="bet?.duration.toFixed(0) >= 1">
                                     <ion-button no-padding
                                                 (click)="closeBet(bet)"
                                                 class="ion-margin-top red"
